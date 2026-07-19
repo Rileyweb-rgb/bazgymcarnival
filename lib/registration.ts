@@ -1,5 +1,22 @@
 export type PreferredDay = "5-sept" | "6-sept";
-export type PreferredTime = "morning" | "afternoon";
+
+/** Pop-up class hourly slots (class names TBA). */
+export type PreferredTime =
+  | "10-11"
+  | "11-12"
+  | "12-13"
+  | "13-14"
+  | "14-15"
+  | "15-16";
+
+export const PREFERRED_TIME_SLOTS: PreferredTime[] = [
+  "10-11",
+  "11-12",
+  "12-13",
+  "13-14",
+  "14-15",
+  "15-16",
+];
 
 export type RegistrationPayload = {
   childName: string;
@@ -18,9 +35,17 @@ export const PREFERRED_DAY_LABELS: Record<PreferredDay, string> = {
 };
 
 export const PREFERRED_TIME_LABELS: Record<PreferredTime, string> = {
-  morning: "Morning (10am – 1pm)",
-  afternoon: "Afternoon (1pm – 5pm)",
+  "10-11": "10am – 11am",
+  "11-12": "11am – 12pm",
+  "12-13": "12pm – 1pm",
+  "13-14": "1pm – 2pm",
+  "14-15": "2pm – 3pm",
+  "15-16": "3pm – 4pm",
 };
+
+/** External Google Form for performance sign-up. Empty until link is ready. */
+export const PERFORMANCE_FORM_URL =
+  process.env.NEXT_PUBLIC_PERFORMANCE_FORM_URL?.trim() || "";
 
 export const WAIVER_TEXT = `BAZGYM CARNIVAL 2026 — PARTICIPANT WAIVER & RELEASE
 
@@ -90,7 +115,14 @@ export function validateRegistration(
   if (preferredDay !== "5-sept" && preferredDay !== "6-sept") {
     return { ok: false, error: "Please select a preferred day." };
   }
-  if (preferredTime !== "morning" && preferredTime !== "afternoon") {
+  if (
+    preferredTime !== "10-11" &&
+    preferredTime !== "11-12" &&
+    preferredTime !== "12-13" &&
+    preferredTime !== "13-14" &&
+    preferredTime !== "14-15" &&
+    preferredTime !== "15-16"
+  ) {
     return { ok: false, error: "Please select a preferred time." };
   }
   if (!waiverAccepted) {

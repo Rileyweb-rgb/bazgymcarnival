@@ -11,17 +11,15 @@ import {
   DarkSectionBackdrop,
   SectionBackdrop,
 } from "@/components/poster/SectionBackdrop";
-import { CARNIVAL_GALLERY, CARNIVAL_MEDIA } from "@/lib/carnival-media";
+import { CARNIVAL_GALLERY, CARNIVAL_MEDIA, CARNIVAL_PRIZES } from "@/lib/carnival-media";
 import { ticketCtaLabel } from "@/lib/payment-config";
 
-const WHEEL_SEGMENTS = [
-  { label: "Cartwheel", color: "#ffc93c" },
-  { label: "Balance", color: "#ff5c4d" },
-  { label: "Handstand", color: "#3db8ff" },
-  { label: "Jump", color: "#ff4d8d" },
-  { label: "Roll", color: "#a78bfa" },
-  { label: "Stretch", color: "#34d399" },
-];
+const WHEEL_SEGMENTS = CARNIVAL_PRIZES.map((p) => ({
+  label: p.label,
+  color: p.color,
+  src: p.src,
+  emoji: p.emoji,
+}));
 
 const MARQUEE = [
   "Try",
@@ -38,7 +36,9 @@ export function PosterLanding() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wheelSpinning, setWheelSpinning] = useState(false);
-  const [wheelResult, setWheelResult] = useState<string | null>(null);
+  const [wheelResult, setWheelResult] = useState<(typeof WHEEL_SEGMENTS)[number] | null>(
+    null,
+  );
   const [activeDay, setActiveDay] = useState<0 | 1>(0);
   const [countdown, setCountdown] = useState({ d: 0, h: 0, m: 0, s: 0 });
 
@@ -75,7 +75,7 @@ export function PosterLanding() {
     setWheelRotation((r) => r + 5 * 360 + idx * segmentAngle + segmentAngle / 2);
     setTimeout(() => {
       setWheelSpinning(false);
-      setWheelResult(WHEEL_SEGMENTS[idx].label);
+      setWheelResult(WHEEL_SEGMENTS[idx]);
     }, 3200);
   }
 
@@ -404,8 +404,8 @@ export function PosterLanding() {
         </div>
       </section>
 
-      {/* ── SPIN ── */}
-      <section id="spin" className="poster-section relative overflow-hidden bg-[#fff8f0] px-6">
+      {/* ── SPIN / PRIZES ── */}
+      <section id="spin" className="poster-section relative overflow-hidden bg-[#fff8f0] px-6 py-20">
         <SectionBackdrop
           src={CARNIVAL_MEDIA.spin}
           alt=""
@@ -423,20 +423,54 @@ export function PosterLanding() {
           </ScrollReveal>
 
           <ScrollReveal delay={150}>
-            <p className="mx-auto mt-6 max-w-lg text-xl text-[#0c1a2e]/65">
-              Take on carnival challenges and walk away with prizes.
+            <p className="mx-auto mt-6 max-w-xl text-xl text-[#0c1a2e]/65">
+              Take on carnival challenges, spin the wheel, and win cute prizes — crochet toys, plush,
+              water bottles, goodie bags &amp; more.
             </p>
           </ScrollReveal>
 
+          {/* Prize gallery */}
+          <ScrollReveal delay={200}>
+            <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+              {CARNIVAL_PRIZES.map((prize) => (
+                <div
+                  key={prize.id}
+                  className="group overflow-hidden rounded-3xl border border-[#0c1a2e]/8 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="relative aspect-square overflow-hidden bg-[#fff8f0]">
+                    <Image
+                      src={prize.src}
+                      alt={prize.label}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 50vw, 200px"
+                    />
+                  </div>
+                  <div className="px-3 py-3 text-left">
+                    <p className="font-display text-sm font-bold text-[#0c1a2e]">
+                      {prize.emoji} {prize.label}
+                    </p>
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-[#0c1a2e]/40">
+                      Carnival prize
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+
           <ScrollReveal delay={300}>
-            <div className="relative mx-auto mt-14 flex flex-col items-center">
+            <div className="relative mx-auto mt-16 flex flex-col items-center">
+              <p className="mb-6 font-display text-lg font-bold text-[#0c1a2e]">
+                🎡 Spin the prize wheel
+              </p>
               <div className="wheel-pointer relative z-10 -mb-3 text-2xl text-[#ff5c4d]">▼</div>
               <button
                 type="button"
                 onClick={spinWheel}
                 disabled={wheelSpinning}
-                aria-label="Spin the carnival wheel"
-                className="relative h-56 w-56 rounded-full shadow-2xl transition hover:scale-105 disabled:opacity-80 md:h-64 md:w-64"
+                aria-label="Spin the carnival prize wheel"
+                className="relative h-56 w-56 rounded-full shadow-2xl transition hover:scale-105 disabled:opacity-80 md:h-72 md:w-72"
                 style={{
                   transform: `rotate(${wheelRotation}deg)`,
                   transition: wheelSpinning
@@ -450,19 +484,35 @@ export function PosterLanding() {
                 }}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0c1a2e] font-display text-xs font-bold text-white shadow-lg md:h-16 md:w-16">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0c1a2e] font-display text-xs font-bold text-white shadow-lg md:h-20 md:w-20 md:text-sm">
                     SPIN
                   </div>
                 </div>
               </button>
               {wheelResult && (
-                <p className="mt-8 font-display text-2xl font-bold text-[#0c1a2e]">
-                  Your challenge:{" "}
-                  <span className="text-poster-gradient">{wheelResult}!</span>
-                </p>
+                <div className="mt-10 flex max-w-sm flex-col items-center rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-5 shadow-lg">
+                  <div className="relative h-28 w-28 overflow-hidden rounded-2xl">
+                    <Image
+                      src={wheelResult.src}
+                      alt={wheelResult.label}
+                      fill
+                      className="object-cover"
+                      sizes="112px"
+                    />
+                  </div>
+                  <p className="font-display mt-4 text-xl font-bold text-[#0c1a2e]">
+                    You won:{" "}
+                    <span className="text-poster-gradient">
+                      {wheelResult.emoji} {wheelResult.label}!
+                    </span>
+                  </p>
+                  <p className="mt-1 text-xs text-[#0c1a2e]/45">
+                    Preview only — real prizes on carnival day
+                  </p>
+                </div>
               )}
-              <p className="mt-3 text-sm text-[#0c1a2e]/40">
-                {wheelSpinning ? "Spinning…" : "Tap to peek at a challenge"}
+              <p className="mt-4 text-sm text-[#0c1a2e]/40">
+                {wheelSpinning ? "Spinning…" : "Tap the wheel for a fun peek at the prizes"}
               </p>
             </div>
           </ScrollReveal>

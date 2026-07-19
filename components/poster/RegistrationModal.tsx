@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { QrCanvas } from "@/components/poster/QrCanvas";
 import { PAYMENT_CONFIG } from "@/lib/payment-config";
 import {
+  PERFORMANCE_FORM_URL,
   PREFERRED_DAY_LABELS,
   PREFERRED_TIME_LABELS,
+  PREFERRED_TIME_SLOTS,
   type PreferredDay,
   type PreferredTime,
   WAIVER_TEXT,
@@ -15,6 +17,9 @@ type RegistrationModalProps = {
   open: boolean;
   onClose: () => void;
 };
+
+/** First screen: pick track. Then popup goes to existing form flow. */
+type Track = "choose" | "performance" | "popup";
 
 type FormState = {
   childName: string;
@@ -111,6 +116,7 @@ function StepIndicator({ step }: { step: Step }) {
 }
 
 export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
+  const [track, setTrack] = useState<Track>("choose");
   const [form, setForm] = useState<FormState>(INITIAL);
   const [step, setStep] = useState<Step>(1);
   const [submitting, setSubmitting] = useState(false);
@@ -129,6 +135,7 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
 
   useEffect(() => {
     if (!open) {
+      setTrack("choose");
       setForm(INITIAL);
       setStep(1);
       setError(null);
@@ -150,7 +157,15 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
   if (!open) return null;
 
   const modalTitle =
-    step === 1 ? "Register" : step === 2 ? "Payment" : "Your Ticket";
+    track === "choose"
+      ? "What are you signing up for?"
+      : track === "performance"
+        ? "Performance"
+        : step === 1
+          ? "Pop-up class"
+          : step === 2
+            ? "Payment"
+            : "Your Ticket";
 
   const summaryLine =
     form.preferredDay && form.preferredTime
@@ -178,6 +193,16 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
     const reader = new FileReader();
     reader.onload = () => setProofPreview(reader.result as string);
     reader.readAsDataURL(file);
+  }
+
+  function backToChoose() {
+    setTrack("choose");
+    setStep(1);
+    setError(null);
+    setForm(INITIAL);
+    setProofFile(null);
+    setProofPreview(null);
+    setAttendeeCode(null);
   }
 
   async function submitRegistration() {
@@ -264,301 +289,401 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
             </button>
           </div>
 
-          <StepIndicator step={step} />
-
-          {step === 1 && (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                goToPayment();
-              }}
-              className="space-y-5"
-            >
-              <Field label="Child's full name" required>
-                <input
-                  type="text"
-                  required
-                  value={form.childName}
-                  onChange={(e) => setForm((f) => ({ ...f, childName: e.target.value }))}
-                  className="register-input"
-                  placeholder="e.g. Emma Tan"
-                  autoComplete="name"
-                />
-              </Field>
-
-              <Field label="Parent / guardian full name" required>
-                <input
-                  type="text"
-                  required
-                  value={form.parentGuardianName}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, parentGuardianName: e.target.value }))
-                  }
-                  className="register-input"
-                  placeholder="e.g. Sarah Tan"
-                  autoComplete="name"
-                />
-              </Field>
-
-              <Field label="Email" required>
-                <input
-                  type="email"
-                  required
-                  value={form.parentEmail}
-                  onChange={(e) => setForm((f) => ({ ...f, parentEmail: e.target.value }))}
-                  className="register-input"
-                  placeholder="e.g. sarah@email.com"
-                  autoComplete="email"
-                />
-              </Field>
-
-              <Field label="Contact number" required>
-                <input
-                  type="tel"
-                  required
-                  value={form.contactNumber}
-                  onChange={(e) => setForm((f) => ({ ...f, contactNumber: e.target.value }))}
-                  className="register-input"
-                  placeholder="e.g. 9123 4567"
-                  autoComplete="tel"
-                />
-              </Field>
-
-              <Field label="Child's date of birth" required>
-                <input
-                  type="date"
-                  required
-                  value={form.childDateOfBirth}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, childDateOfBirth: e.target.value }))
-                  }
-                  className="register-input"
-                  max={new Date().toISOString().split("T")[0]}
-                />
-              </Field>
-
-              <fieldset>
-                <legend className="mb-3 text-sm font-bold text-[#0c1a2e]">
-                  Preferred day <span className="text-[#ff5c4d]">*</span>
-                </legend>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {(["5-sept", "6-sept"] as const).map((day) => (
-                    <label
-                      key={day}
-                      className={`flex cursor-pointer items-center gap-3 rounded-2xl border-2 p-4 transition ${
-                        form.preferredDay === day
-                          ? "border-[#ff5c4d] bg-[#ff5c4d]/8"
-                          : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="preferredDay"
-                        value={day}
-                        checked={form.preferredDay === day}
-                        onChange={() => setForm((f) => ({ ...f, preferredDay: day }))}
-                        className="h-4 w-4 accent-[#ff5c4d]"
-                        required
-                      />
-                      <span className="font-display text-sm font-bold text-[#0c1a2e]">
-                        {PREFERRED_DAY_LABELS[day]}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
-              <fieldset>
-                <legend className="mb-3 text-sm font-bold text-[#0c1a2e]">
-                  Preferred time <span className="text-[#ff5c4d]">*</span>
-                </legend>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {(["morning", "afternoon"] as const).map((slot) => (
-                    <label
-                      key={slot}
-                      className={`flex cursor-pointer items-center gap-3 rounded-2xl border-2 p-4 transition ${
-                        form.preferredTime === slot
-                          ? "border-[#3db8ff] bg-[#3db8ff]/8"
-                          : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="preferredTime"
-                        value={slot}
-                        checked={form.preferredTime === slot}
-                        onChange={() => setForm((f) => ({ ...f, preferredTime: slot }))}
-                        className="h-4 w-4 accent-[#3db8ff]"
-                        required
-                      />
-                      <span className="font-display text-sm font-bold text-[#0c1a2e]">
-                        {PREFERRED_TIME_LABELS[slot]}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
-              <div className="rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-4">
-                <p className="font-display text-sm font-bold text-[#0c1a2e]">Waiver &amp; release</p>
-                <div className="mt-3 max-h-44 overflow-y-auto rounded-xl bg-[#fff8f0] p-3 text-xs leading-relaxed text-[#0c1a2e]/70 whitespace-pre-line">
-                  {WAIVER_TEXT}
-                </div>
-                <label className="mt-4 flex cursor-pointer items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={form.waiverAccepted}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, waiverAccepted: e.target.checked }))
-                    }
-                    className="mt-0.5 h-4 w-4 shrink-0 accent-[#ff5c4d]"
-                    required
-                  />
-                  <span className="text-sm font-semibold text-[#0c1a2e]">
-                    I have read and agree to the waiver on behalf of myself and my child.{" "}
-                    <span className="text-[#ff5c4d]">*</span>
-                  </span>
-                </label>
-              </div>
-
-              {error && <ErrorBox message={error} />}
-
-              <button
-                type="submit"
-                disabled={!form.waiverAccepted}
-                className="w-full rounded-2xl bg-[#0c1a2e] py-4 font-display text-base font-bold text-white transition hover:bg-[#0c1a2e]/90 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Continue to Payment →
-              </button>
-            </form>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-5">
-              <div className="rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-5 text-center">
-                <p className="font-display text-base font-bold text-[#0c1a2e]">
-                  Scan to pay with {PAYMENT_CONFIG.paymentMethod}
-                </p>
-                <p className="mt-1 text-sm text-[#0c1a2e]/55">
-                  Ticket fee will be confirmed at registration
-                </p>
-                <QrCanvas seed={PAYMENT_CONFIG.paynowQrSeed} size={220} className="mt-4" />
-                <p className="mt-3 inline-block rounded-full bg-[#ffc93c]/25 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#8a6100]">
-                  Placeholder QR — final PayNow code coming soon
-                </p>
-                <p className="mt-3 text-xs leading-relaxed text-[#0c1a2e]/55">
-                  1. Scan the QR with your banking app
-                  <br />
-                  2. Complete payment and screenshot the receipt
-                  <br />
-                  3. Upload the screenshot below
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm font-bold text-[#0c1a2e]">
-                  Upload payment screenshot <span className="text-[#ff5c4d]">*</span>
-                </p>
-                {proofPreview ? (
-                  <div className="mt-2 overflow-hidden rounded-2xl border-2 border-[#0c1a2e]/10">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={proofPreview}
-                      alt="Payment screenshot preview"
-                      className="block max-h-60 w-full object-contain bg-white"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProofFile(null);
-                        setProofPreview(null);
-                      }}
-                      className="w-full border-t border-[#0c1a2e]/10 py-2 text-sm font-semibold text-[#ff5c4d]"
-                    >
-                      Remove &amp; choose another
-                    </button>
-                  </div>
-                ) : (
-                  <label className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#0c1a2e]/15 bg-white px-4 py-10 transition hover:border-[#ff5c4d]/40">
-                    <span className="text-3xl">📷</span>
-                    <span className="mt-2 font-display text-sm font-bold text-[#0c1a2e]">
-                      Tap to upload screenshot
-                    </span>
-                    <span className="mt-1 text-xs text-[#0c1a2e]/45">
-                      PNG, JPG or WebP · max 4 MB
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="sr-only"
-                      onChange={(e) => onProofFile(e.target.files?.[0] ?? null)}
-                    />
-                  </label>
-                )}
-              </div>
-
-              <p className="text-xs text-[#0c1a2e]/45">
-                Registering for: <strong>{form.childName}</strong> · {summaryLine}
+          {/* ── CHOOSE TRACK ── */}
+          {track === "choose" && (
+            <div className="mt-6 space-y-4">
+              <p className="text-sm text-[#0c1a2e]/60">
+                Pick one path to continue. You can close and register again for the other.
               </p>
-
-              {error && <ErrorBox message={error} />}
-
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep(1);
-                    setError(null);
-                  }}
-                  className="rounded-2xl border-2 border-[#0c1a2e]/15 px-4 py-4 font-display text-sm font-bold text-[#0c1a2e]"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={submitRegistration}
-                  disabled={submitting || !proofFile}
-                  className="flex-1 rounded-2xl bg-[#0c1a2e] py-4 font-display text-base font-bold text-white transition hover:bg-[#0c1a2e]/90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {submitting ? "Submitting…" : "Confirm & Get My Ticket"}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && attendeeCode && (
-            <div className="text-center">
-              <p className="text-5xl">🎟️</p>
-              <p className="font-display mt-4 text-2xl font-bold text-[#0c1a2e]">
-                Registration received!
-              </p>
-              <p className="mt-2 text-sm text-[#0c1a2e]/65">
-                {summaryLine} · {form.childName}
-              </p>
-
-              <div className="mt-6 rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-6">
-                <p className="font-display text-sm font-bold uppercase tracking-wider text-[#0c1a2e]/45">
-                  Your ticket code
-                </p>
-                <p className="font-display mt-2 text-4xl font-bold tracking-widest text-[#ff5c4d]">
-                  {attendeeCode}
-                </p>
-                <QrCanvas seed={attendeeCode} size={180} className="mt-4" />
-                <p className="mt-4 text-xs leading-relaxed text-[#0c1a2e]/55">
-                  Show this code at the door. Once our team verifies your payment, a confirmation
-                  email with this code and QR will be sent to{" "}
-                  <strong>{form.parentEmail}</strong>.
-                </p>
-              </div>
 
               <button
                 type="button"
-                onClick={onClose}
-                className="mt-6 w-full rounded-2xl bg-[#0c1a2e] py-4 font-display font-bold text-white"
+                onClick={() => setTrack("performance")}
+                className="group w-full rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-6 text-left transition hover:border-[#ff5c4d] hover:shadow-lg hover:shadow-[#ff5c4d]/10"
               >
-                Done
+                <span className="text-3xl">⭐</span>
+                <p className="font-display mt-3 text-xl font-bold text-[#0c1a2e] group-hover:text-[#ff5c4d]">
+                  Performance
+                </p>
+                <p className="mt-1 text-sm text-[#0c1a2e]/55">
+                  Showcase / competitive performance sign-up. External form — link coming soon.
+                </p>
+                <p className="mt-4 font-display text-sm font-bold text-[#ff5c4d]">Continue →</p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setTrack("popup");
+                  setStep(1);
+                  setError(null);
+                }}
+                className="group w-full rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-6 text-left transition hover:border-[#3db8ff] hover:shadow-lg hover:shadow-[#3db8ff]/10"
+              >
+                <span className="text-3xl">🤸</span>
+                <p className="font-display mt-3 text-xl font-bold text-[#0c1a2e] group-hover:text-[#3db8ff]">
+                  Pop-up class
+                </p>
+                <p className="mt-1 text-sm text-[#0c1a2e]/55">
+                  Trial classes on the day — register here, pay, and get logged into our sheet.
+                </p>
+                <p className="mt-4 font-display text-sm font-bold text-[#3db8ff]">Register →</p>
               </button>
             </div>
+          )}
+
+          {/* ── PERFORMANCE PLACEHOLDER ── */}
+          {track === "performance" && (
+            <div className="mt-6 space-y-5">
+              <div className="rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-6 text-center">
+                <p className="text-4xl">⭐</p>
+                <p className="font-display mt-3 text-xl font-bold text-[#0c1a2e]">
+                  Performance form
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-[#0c1a2e]/60">
+                  Performance sign-ups will open via an external Google Form. The link is not ready
+                  yet — check back soon, or contact BazGym for early enquiries.
+                </p>
+                {PERFORMANCE_FORM_URL ? (
+                  <a
+                    href={PERFORMANCE_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-[#ff5c4d] py-4 font-display font-bold text-white transition hover:bg-[#ff5c4d]/90"
+                  >
+                    Open performance form →
+                  </a>
+                ) : (
+                  <p className="mt-6 rounded-2xl bg-[#ffc93c]/25 px-4 py-3 font-display text-sm font-bold text-[#8a6100]">
+                    Google Form link coming soon
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={backToChoose}
+                className="w-full rounded-2xl border-2 border-[#0c1a2e]/15 py-3 font-display text-sm font-bold text-[#0c1a2e]"
+              >
+                ← Back to choices
+              </button>
+            </div>
+          )}
+
+          {/* ── POP-UP CLASS FLOW ── */}
+          {track === "popup" && (
+            <>
+              <div className="mt-2 mb-2 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={backToChoose}
+                  className="text-xs font-bold uppercase tracking-wider text-[#0c1a2e]/45 transition hover:text-[#0c1a2e]"
+                >
+                  ← Change type
+                </button>
+              </div>
+
+              <StepIndicator step={step} />
+
+              {step === 1 && (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    goToPayment();
+                  }}
+                  className="space-y-5"
+                >
+                  <Field label="Child's full name" required>
+                    <input
+                      type="text"
+                      required
+                      value={form.childName}
+                      onChange={(e) => setForm((f) => ({ ...f, childName: e.target.value }))}
+                      className="register-input"
+                      placeholder="e.g. Emma Tan"
+                      autoComplete="name"
+                    />
+                  </Field>
+
+                  <Field label="Parent / guardian full name" required>
+                    <input
+                      type="text"
+                      required
+                      value={form.parentGuardianName}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, parentGuardianName: e.target.value }))
+                      }
+                      className="register-input"
+                      placeholder="e.g. Sarah Tan"
+                      autoComplete="name"
+                    />
+                  </Field>
+
+                  <Field label="Email" required>
+                    <input
+                      type="email"
+                      required
+                      value={form.parentEmail}
+                      onChange={(e) => setForm((f) => ({ ...f, parentEmail: e.target.value }))}
+                      className="register-input"
+                      placeholder="e.g. sarah@email.com"
+                      autoComplete="email"
+                    />
+                  </Field>
+
+                  <Field label="Contact number" required>
+                    <input
+                      type="tel"
+                      required
+                      value={form.contactNumber}
+                      onChange={(e) => setForm((f) => ({ ...f, contactNumber: e.target.value }))}
+                      className="register-input"
+                      placeholder="e.g. 9123 4567"
+                      autoComplete="tel"
+                    />
+                  </Field>
+
+                  <Field label="Child's date of birth" required>
+                    <input
+                      type="date"
+                      required
+                      value={form.childDateOfBirth}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, childDateOfBirth: e.target.value }))
+                      }
+                      className="register-input"
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Field>
+
+                  <fieldset>
+                    <legend className="mb-3 text-sm font-bold text-[#0c1a2e]">
+                      Preferred day <span className="text-[#ff5c4d]">*</span>
+                    </legend>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {(["5-sept", "6-sept"] as const).map((day) => (
+                        <label
+                          key={day}
+                          className={`flex cursor-pointer items-center gap-3 rounded-2xl border-2 p-4 transition ${
+                            form.preferredDay === day
+                              ? "border-[#ff5c4d] bg-[#ff5c4d]/8"
+                              : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="preferredDay"
+                            value={day}
+                            checked={form.preferredDay === day}
+                            onChange={() => setForm((f) => ({ ...f, preferredDay: day }))}
+                            className="h-4 w-4 accent-[#ff5c4d]"
+                            required
+                          />
+                          <span className="font-display text-sm font-bold text-[#0c1a2e]">
+                            {PREFERRED_DAY_LABELS[day]}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <fieldset>
+                    <legend className="mb-3 text-sm font-bold text-[#0c1a2e]">
+                      Preferred class time <span className="text-[#ff5c4d]">*</span>
+                    </legend>
+                    <p className="mb-3 text-xs text-[#0c1a2e]/45">
+                      Each hour is a different class — full schedule coming soon.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {PREFERRED_TIME_SLOTS.map((slot) => (
+                        <label
+                          key={slot}
+                          className={`flex cursor-pointer items-center justify-center rounded-2xl border-2 px-2 py-3 transition ${
+                            form.preferredTime === slot
+                              ? "border-[#3db8ff] bg-[#3db8ff]/10"
+                              : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="preferredTime"
+                            value={slot}
+                            checked={form.preferredTime === slot}
+                            onChange={() => setForm((f) => ({ ...f, preferredTime: slot }))}
+                            className="sr-only"
+                            required
+                          />
+                          <span className="font-display text-center text-xs font-bold text-[#0c1a2e] sm:text-sm">
+                            {PREFERRED_TIME_LABELS[slot]}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <div className="rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-4">
+                    <p className="font-display text-sm font-bold text-[#0c1a2e]">
+                      Waiver &amp; release
+                    </p>
+                    <div className="mt-3 max-h-44 overflow-y-auto rounded-xl bg-[#fff8f0] p-3 text-xs leading-relaxed text-[#0c1a2e]/70 whitespace-pre-line">
+                      {WAIVER_TEXT}
+                    </div>
+                    <label className="mt-4 flex cursor-pointer items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={form.waiverAccepted}
+                        onChange={(e) =>
+                          setForm((f) => ({ ...f, waiverAccepted: e.target.checked }))
+                        }
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-[#ff5c4d]"
+                        required
+                      />
+                      <span className="text-sm font-semibold text-[#0c1a2e]">
+                        I have read and agree to the waiver on behalf of myself and my child.{" "}
+                        <span className="text-[#ff5c4d]">*</span>
+                      </span>
+                    </label>
+                  </div>
+
+                  {error && <ErrorBox message={error} />}
+
+                  <button
+                    type="submit"
+                    disabled={!form.waiverAccepted}
+                    className="w-full rounded-2xl bg-[#0c1a2e] py-4 font-display text-base font-bold text-white transition hover:bg-[#0c1a2e]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Continue to Payment →
+                  </button>
+                </form>
+              )}
+
+              {step === 2 && (
+                <div className="space-y-5">
+                  <div className="rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-5 text-center">
+                    <p className="font-display text-base font-bold text-[#0c1a2e]">
+                      Scan to pay with {PAYMENT_CONFIG.paymentMethod}
+                    </p>
+                    <p className="mt-1 text-sm text-[#0c1a2e]/55">
+                      Ticket fee will be confirmed at registration
+                    </p>
+                    <QrCanvas seed={PAYMENT_CONFIG.paynowQrSeed} size={220} className="mt-4" />
+                    <p className="mt-3 inline-block rounded-full bg-[#ffc93c]/25 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#8a6100]">
+                      Placeholder QR — final PayNow code coming soon
+                    </p>
+                    <p className="mt-3 text-xs leading-relaxed text-[#0c1a2e]/55">
+                      1. Scan the QR with your banking app
+                      <br />
+                      2. Complete payment and screenshot the receipt
+                      <br />
+                      3. Upload the screenshot below
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-bold text-[#0c1a2e]">
+                      Upload payment screenshot <span className="text-[#ff5c4d]">*</span>
+                    </p>
+                    {proofPreview ? (
+                      <div className="mt-2 overflow-hidden rounded-2xl border-2 border-[#0c1a2e]/10">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={proofPreview}
+                          alt="Payment screenshot preview"
+                          className="block max-h-60 w-full object-contain bg-white"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setProofFile(null);
+                            setProofPreview(null);
+                          }}
+                          className="w-full border-t border-[#0c1a2e]/10 py-2 text-sm font-semibold text-[#ff5c4d]"
+                        >
+                          Remove &amp; choose another
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#0c1a2e]/15 bg-white px-4 py-10 transition hover:border-[#ff5c4d]/40">
+                        <span className="text-3xl">📷</span>
+                        <span className="mt-2 font-display text-sm font-bold text-[#0c1a2e]">
+                          Tap to upload screenshot
+                        </span>
+                        <span className="mt-1 text-xs text-[#0c1a2e]/45">
+                          PNG, JPG or WebP · max 4 MB
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="sr-only"
+                          onChange={(e) => onProofFile(e.target.files?.[0] ?? null)}
+                        />
+                      </label>
+                    )}
+                  </div>
+
+                  <p className="text-xs text-[#0c1a2e]/45">
+                    Registering for: <strong>{form.childName}</strong> · {summaryLine}
+                  </p>
+
+                  {error && <ErrorBox message={error} />}
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStep(1);
+                        setError(null);
+                      }}
+                      className="rounded-2xl border-2 border-[#0c1a2e]/15 px-4 py-4 font-display text-sm font-bold text-[#0c1a2e]"
+                    >
+                      ← Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={submitRegistration}
+                      disabled={submitting || !proofFile}
+                      className="flex-1 rounded-2xl bg-[#0c1a2e] py-4 font-display text-base font-bold text-white transition hover:bg-[#0c1a2e]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {submitting ? "Submitting…" : "Confirm & Get My Ticket"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {step === 3 && attendeeCode && (
+                <div className="text-center">
+                  <p className="text-5xl">🎟️</p>
+                  <p className="font-display mt-4 text-2xl font-bold text-[#0c1a2e]">
+                    Registration received!
+                  </p>
+                  <p className="mt-2 text-sm text-[#0c1a2e]/65">
+                    {summaryLine} · {form.childName}
+                  </p>
+
+                  <div className="mt-6 rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-6">
+                    <p className="font-display text-sm font-bold uppercase tracking-wider text-[#0c1a2e]/45">
+                      Your ticket code
+                    </p>
+                    <p className="font-display mt-2 text-4xl font-bold tracking-widest text-[#ff5c4d]">
+                      {attendeeCode}
+                    </p>
+                    <QrCanvas seed={attendeeCode} size={180} className="mt-4" />
+                    <p className="mt-4 text-xs leading-relaxed text-[#0c1a2e]/55">
+                      Show this code at the door. Once our team verifies your payment, a confirmation
+                      email with this code and QR will be sent to{" "}
+                      <strong>{form.parentEmail}</strong>.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="mt-6 w-full rounded-2xl bg-[#0c1a2e] py-4 font-display font-bold text-white"
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

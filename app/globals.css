@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fredoka", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  --color-poster-cream: #fff8f0;
+  --color-poster-warm: #ffe8d6;
+  --color-poster-navy: #0c1a2e;
+  --color-poster-coral: #ff5c4d;
+  --color-poster-sun: #ffc93c;
+  --color-poster-sky: #3db8ff;
+  --color-poster-pink: #ff4d8d;
+  --color-poster-lilac: #a78bfa;
+  --color-poster-mint: #34d399;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-poster-cream);
+  color: var(--color-poster-navy);
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Apple-style scroll sections */
+.poster-section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+/* Sticker badge */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: rotate(-2deg);
+}
+
+.sticker-right {
+  transform: rotate(2deg);
+}
+
+/* Poster headline gradient */
+.text-poster-gradient {
+  background: linear-gradient(135deg, #ff5c4d 0%, #ffc93c 40%, #ff4d8d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Dashed ticket border */
+.ticket-outline {
+  border: 3px dashed rgba(12, 26, 46, 0.15);
+  border-radius: 1.5rem;
+}
+
+/* Floating blob decorations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
+  }
+}
+
+.blob-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.wiggle {
+  animation: wiggle 3s ease-in-out infinite;
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-inner {
+  animation: marquee 30s linear infinite;
+}
+
+/* Giant poster text shadow */
+.poster-shadow {
+  text-shadow: 4px 4px 0 rgba(255, 92, 77, 0.25);
+}
+
+/* Sticky nav blur */
+.nav-glass {
+  background: rgba(255, 248, 240, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Wheel */
+.wheel-pointer {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Schedule line */
+.schedule-line {
+  background: linear-gradient(
+    to bottom,
+    var(--color-poster-coral),
+    var(--color-poster-sun),
+    var(--color-poster-sky),
+    var(--color-poster-pink)
+  );
+}
+
+.register-input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 2px solid rgba(12, 26, 46, 0.1);
+  background: white;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  color: #0c1a2e;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.register-input:focus {
+  border-color: #ff5c4d;
+}
+
+.register-input::placeholder {
+  color: rgba(12, 26, 46, 0.35);
+}

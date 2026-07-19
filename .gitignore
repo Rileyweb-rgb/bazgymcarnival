@@ -1,0 +1,14 @@
+# dependencies
+node_modules
+# next
+.next
+out
+# env / vercel local
+.env
+.env*.local
+.vercel
+# junk
+_src_probe
+_live.html
+*.log
+.DS_Store

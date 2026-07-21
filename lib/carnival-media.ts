@@ -18,6 +18,8 @@ export type PrizeItem = {
   src: string;
   color: string;
   isGrand?: boolean;
+  /** How the image fills the card — vouchers are square; merch posters are taller. */
+  imageFit?: "cover" | "contain";
 };
 
 /** Grand prize — large banner on the prizes section. */
@@ -42,6 +44,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "$50 e-voucher",
     src: "/media/prizes/prize-voucher-50.jpg",
     color: "#ff5c4d",
+    imageFit: "cover",
   },
   {
     id: "voucher-10",
@@ -49,6 +52,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "$10 e-voucher",
     src: "/media/prizes/prize-voucher-10.jpg",
     color: "#3db8ff",
+    imageFit: "cover",
   },
   {
     id: "uniform",
@@ -56,6 +60,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Uniform set",
     src: "/media/prizes/prize-uniform.jpg",
     color: "#ff7a3d",
+    imageFit: "cover",
   },
   {
     id: "tumbler",
@@ -63,6 +68,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Tumbler",
     src: "/media/prizes/bazgym-tumbler.jpg",
     color: "#0c1a2e",
+    imageFit: "cover",
   },
   {
     id: "towel",
@@ -70,6 +76,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Towel",
     src: "/media/prizes/bazgym-towel.jpg",
     color: "#6b7c93",
+    imageFit: "cover",
   },
   {
     id: "bag",
@@ -77,14 +84,16 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Recyclable bag",
     src: "/media/prizes/bazgym-recyclable-bag.jpg",
     color: "#ff5c4d",
+    imageFit: "cover",
   },
   {
     id: "blind-box",
     label: "BazGym limited edition blind box crochet toy",
     shortLabel: "Blind box crochet",
-    note: "Surprise figure inside — including rare mystery gymnast",
-    src: "/media/prizes/prize-blind-box-crew.jpg",
+    note: "Mystery collection · includes rare gymnast crochet",
+    src: "/media/prizes/prize-crochet-poster.jpg",
     color: "#a78bfa",
+    imageFit: "cover",
   },
   {
     id: "patch",
@@ -92,15 +101,9 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Iron-on patch",
     src: "/media/prizes/prize-patch.jpg",
     color: "#34d399",
+    imageFit: "cover",
   },
 ];
-
-/** Silhouette tease for the mystery gymnast crochet (blind-box rare). */
-export const MYSTERY_CROCHET = {
-  label: "Mystery gymnast crochet",
-  note: "Blind-box surprise · silhouette only",
-  src: "/media/prizes/prize-mystery-gymnast.jpg",
-} as const;
 
 /**
  * Build 25 prize-wheel slots for reference copy:

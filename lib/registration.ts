@@ -43,9 +43,10 @@ export const PREFERRED_TIME_LABELS: Record<PreferredTime, string> = {
   "15-16": "3pm – 4pm",
 };
 
-/** External Google Form for performance sign-up. Empty until link is ready. */
+/** External Google Form for performance / competitive showcase sign-up. */
 export const PERFORMANCE_FORM_URL =
-  process.env.NEXT_PUBLIC_PERFORMANCE_FORM_URL?.trim() || "";
+  process.env.NEXT_PUBLIC_PERFORMANCE_FORM_URL?.trim() ||
+  "https://forms.gle/w3jn1rMov3D5f5d28";
 
 export const WAIVER_TEXT = `BAZGYM CARNIVAL 2026 — PARTICIPANT WAIVER & RELEASE
 

@@ -391,98 +391,74 @@ export function PosterLanding() {
             </p>
           </ScrollReveal>
 
-          {/* Grand prize — full-bleed image banner */}
+          {/* Grand prize — graphic already has title; caption sits below (no overlay clash) */}
           <ScrollReveal delay={150}>
-            <div className="relative mt-12 overflow-hidden rounded-[2rem] border-2 border-[#ffc93c]/50 shadow-2xl shadow-[#ffc93c]/20">
-              <div className="relative aspect-[16/10] w-full min-h-[220px] sm:aspect-[21/9] sm:min-h-[280px] md:min-h-[340px]">
-                <Image
-                  src={GRAND_PRIZE.src}
-                  alt={GRAND_PRIZE.label}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 768px) 100vw, 1152px"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1a2e]/90 via-[#0c1a2e]/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5 text-left sm:p-8">
-                  <p className="font-display text-xs font-bold uppercase tracking-[0.3em] text-[#ffc93c]">
-                    ★ Grand prize
-                  </p>
-                  <h3 className="font-display mt-2 text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
-                    {GRAND_PRIZE.label}
-                  </h3>
-                  <p className="mt-2 text-sm text-white/70">{GRAND_PRIZE.note}</p>
-                  <p className="mt-2 text-xs text-white/45">
-                    Prize wheel: 1 grand slot + prizes 2–9 each ×3 = 25 slots total
-                  </p>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Crochet blind box — featured right under grand prize */}
-          <ScrollReveal delay={180}>
-            <div className="mt-6 overflow-hidden rounded-[2rem] border border-white/15 bg-white shadow-xl">
-              <div className="grid items-stretch md:grid-cols-[1.15fr_0.85fr]">
-                <div className="relative min-h-[320px] w-full bg-[#1a0b2e] sm:min-h-[400px] md:min-h-[480px]">
+            <div className="mx-auto mt-12 max-w-xl">
+              <div className="overflow-hidden rounded-[1.75rem] border border-[#ffc93c]/40 bg-[#06101c] shadow-[0_20px_60px_-20px_rgba(255,201,60,0.35)]">
+                <div className="relative aspect-square w-full">
                   <Image
-                    src={BLIND_BOX_PRIZE.src}
-                    alt={BLIND_BOX_PRIZE.label}
+                    src={GRAND_PRIZE.src}
+                    alt={GRAND_PRIZE.label}
                     fill
-                    className="object-contain object-center p-3 sm:p-4"
-                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-contain object-center"
+                    sizes="(max-width: 768px) 100vw, 576px"
+                    priority
                   />
                 </div>
-                <div className="flex flex-col justify-center px-6 py-8 text-left md:px-10">
-                  <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-[#a78bfa]">
-                    Limited edition
-                  </p>
-                  <h3 className="font-display mt-3 text-2xl font-bold leading-tight text-[#0c1a2e] md:text-3xl">
-                    Blind box crochet
-                  </h3>
-                  <p className="mt-2 text-base font-semibold text-[#0c1a2e]/70">
-                    Mystery collection
-                  </p>
-                  <p className="mt-3 text-sm leading-relaxed text-[#0c1a2e]/55">
-                    {BLIND_BOX_PRIZE.note}. Collect Ribbit, Teddy, Hammy, crochet cheesecake wedge
-                    — or the rare mystery gymnast figure.
-                  </p>
-                </div>
+              </div>
+              <p className="mt-4 text-sm text-white/70">{GRAND_PRIZE.note}</p>
+              <p className="mt-1 text-xs text-white/40">
+                Prize wheel: 1 grand slot + prizes 2–9 each ×3 = 25 slots total
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Crochet blind box — full poster width, then copy */}
+          <ScrollReveal delay={180}>
+            <div className="mx-auto mt-10 max-w-lg overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#12081f] md:max-w-xl">
+              <Image
+                src={BLIND_BOX_PRIZE.src}
+                alt={BLIND_BOX_PRIZE.label}
+                width={900}
+                height={1200}
+                className="h-auto w-full object-contain"
+                sizes="(max-width: 768px) 100vw, 576px"
+              />
+              <div className="px-6 py-7 text-left sm:px-8">
+                <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-[#c4b5fd]">
+                  Limited edition
+                </p>
+                <h3 className="font-display mt-2 text-2xl font-bold leading-tight text-white md:text-3xl">
+                  Blind box crochet
+                </h3>
+                <p className="mt-2 text-base font-semibold text-white/70">Mystery collection</p>
+                <p className="mt-3 text-sm leading-relaxed text-white/50">
+                  {BLIND_BOX_PRIZE.note}. Collect Ribbit, Teddy, Hammy, crochet cheesecake wedge —
+                  or the rare mystery gymnast figure.
+                </p>
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Other prizes — 4 + 3 grid */}
+          {/* Other prizes — even grid, cover-fill so merch headers stay visible */}
           <ScrollReveal delay={220}>
-            <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-              {CARNIVAL_PRIZES.map((prize) => {
-                const fit = prize.imageFit ?? "contain";
-                return (
-                  <div
-                    key={prize.id}
-                    className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-                  >
-                    <div className="relative aspect-square w-full bg-[#f5f8fc]">
-                      <Image
-                        src={prize.src}
-                        alt={prize.label}
-                        fill
-                        className={`${
-                          fit === "contain"
-                            ? "object-contain p-1.5"
-                            : "object-cover object-center"
-                        } transition duration-500 group-hover:scale-[1.03]`}
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center px-2 py-3 text-center md:px-3">
-                      <p className="font-display text-xs font-bold leading-snug text-[#0c1a2e] md:text-sm">
-                        {prize.shortLabel}
-                      </p>
-                    </div>
+            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+              {CARNIVAL_PRIZES.map((prize) => (
+                <div key={prize.id} className="group text-left">
+                  <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#f5f8fc] ring-1 ring-white/10">
+                    <Image
+                      src={prize.src}
+                      alt={prize.label}
+                      fill
+                      className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    />
                   </div>
-                );
-              })}
+                  <p className="font-display mt-2.5 px-0.5 text-sm font-bold leading-snug text-white">
+                    {prize.shortLabel}
+                  </p>
+                </div>
+              ))}
             </div>
           </ScrollReveal>
         </div>

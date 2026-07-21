@@ -298,7 +298,13 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
 
               <button
                 type="button"
-                onClick={() => setTrack("performance")}
+                onClick={() => {
+                  if (PERFORMANCE_FORM_URL) {
+                    window.open(PERFORMANCE_FORM_URL, "_blank", "noopener,noreferrer");
+                    return;
+                  }
+                  setTrack("performance");
+                }}
                 className="group w-full rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-6 text-left transition hover:border-[#ff5c4d] hover:shadow-lg hover:shadow-[#ff5c4d]/10"
               >
                 <span className="text-3xl">⭐</span>
@@ -306,9 +312,11 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                   Performance
                 </p>
                 <p className="mt-1 text-sm text-[#0c1a2e]/55">
-                  Showcase / competitive performance sign-up. External form — link coming soon.
+                  Showcase / competitive performance sign-up — opens the Google Form.
                 </p>
-                <p className="mt-4 font-display text-sm font-bold text-[#ff5c4d]">Continue →</p>
+                <p className="mt-4 font-display text-sm font-bold text-[#ff5c4d]">
+                  Open form →
+                </p>
               </button>
 
               <button
@@ -332,7 +340,7 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
             </div>
           )}
 
-          {/* ── PERFORMANCE PLACEHOLDER ── */}
+          {/* ── PERFORMANCE (fallback if form URL missing) ── */}
           {track === "performance" && (
             <div className="mt-6 space-y-5">
               <div className="rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-6 text-center">
@@ -341,8 +349,7 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                   Performance form
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-[#0c1a2e]/60">
-                  Performance sign-ups will open via an external Google Form. The link is not ready
-                  yet — check back soon, or contact BazGym for early enquiries.
+                  Showcase and competitive performance sign-up is handled on Google Forms.
                 </p>
                 {PERFORMANCE_FORM_URL ? (
                   <a

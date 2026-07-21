@@ -72,7 +72,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Uniform set",
     src: "/media/prizes/prize-uniform.jpg",
     color: "#ff7a3d",
-    imageFit: "contain",
+    imageFit: "cover",
   },
   {
     id: "tumbler",
@@ -80,7 +80,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Tumbler",
     src: "/media/prizes/bazgym-tumbler.jpg",
     color: "#0c1a2e",
-    imageFit: "contain",
+    imageFit: "cover",
   },
   {
     id: "towel",
@@ -88,7 +88,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Towel",
     src: "/media/prizes/bazgym-towel.jpg",
     color: "#6b7c93",
-    imageFit: "contain",
+    imageFit: "cover",
   },
   {
     id: "bag",
@@ -96,7 +96,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Recyclable bag",
     src: "/media/prizes/bazgym-recyclable-bag.jpg",
     color: "#ff5c4d",
-    imageFit: "contain",
+    imageFit: "cover",
   },
   {
     id: "patch",
@@ -104,7 +104,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Iron-on patch",
     src: "/media/prizes/prize-patch.jpg",
     color: "#34d399",
-    imageFit: "contain",
+    imageFit: "cover",
   },
 ];
 

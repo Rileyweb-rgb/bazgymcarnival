@@ -11,21 +11,26 @@ import {
   DarkSectionBackdrop,
   SectionBackdrop,
 } from "@/components/poster/SectionBackdrop";
-import { CARNIVAL_GALLERY, CARNIVAL_MEDIA, CARNIVAL_PRIZES } from "@/lib/carnival-media";
+import {
+  CARNIVAL_GALLERY,
+  CARNIVAL_MEDIA,
+  CARNIVAL_PRIZES,
+  GRAND_PRIZE,
+  MYSTERY_CROCHET,
+  PERFORMANCE_SCHEDULE,
+  POPUP_SCHEDULE,
+  STRENGTH_CHALLENGES,
+} from "@/lib/carnival-media";
 import { ticketCtaLabel } from "@/lib/payment-config";
 
-const WHEEL_SEGMENTS = CARNIVAL_PRIZES.map((p) => ({
-  label: p.label,
-  color: p.color,
-  src: p.src,
-  emoji: p.emoji,
-}));
+const WHEEL_SEGMENTS = STRENGTH_CHALLENGES;
 
 const MARQUEE = [
   "Try",
   "Watch",
   "Celebrate",
-  "Challenges & Prizes",
+  "Strength Challenge",
+  "Prizes",
   "5–6 Sept",
   "Bedok HomeTeamNS",
   "Register now",
@@ -39,7 +44,6 @@ export function PosterLanding() {
   const [wheelResult, setWheelResult] = useState<(typeof WHEEL_SEGMENTS)[number] | null>(
     null,
   );
-  const [activeDay, setActiveDay] = useState<0 | 1>(0);
   const [countdown, setCountdown] = useState({ d: 0, h: 0, m: 0, s: 0 });
 
   useEffect(() => {
@@ -75,7 +79,7 @@ export function PosterLanding() {
     setWheelRotation((r) => r + 5 * 360 + idx * segmentAngle + segmentAngle / 2);
     setTimeout(() => {
       setWheelSpinning(false);
-      setWheelResult(WHEEL_SEGMENTS[idx]);
+      setWheelResult(WHEEL_SEGMENTS[idx]!);
     }, 3200);
   }
 
@@ -404,7 +408,7 @@ export function PosterLanding() {
         </div>
       </section>
 
-      {/* ── SPIN / PRIZES ── */}
+      {/* ── PRIZES + STRENGTH CHALLENGE ── */}
       <section id="spin" className="poster-section relative overflow-hidden bg-[#fff8f0] px-6 py-20">
         <SectionBackdrop
           src={CARNIVAL_MEDIA.spin}
@@ -417,56 +421,118 @@ export function PosterLanding() {
             <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-[#a78bfa]">
               04 — Fringe Activities
             </p>
-            <h2 className="font-display mt-4 text-[clamp(2.5rem,10vw,6rem)] font-bold leading-none text-[#0c1a2e]">
+            <h2 className="font-display mt-4 text-[clamp(2.5rem,10vw,5.5rem)] font-bold leading-none text-[#0c1a2e]">
               Challenges &amp; prizes.
             </h2>
           </ScrollReveal>
 
-          <ScrollReveal delay={150}>
-            <p className="mx-auto mt-6 max-w-xl text-xl text-[#0c1a2e]/65">
-              Take on carnival challenges, spin the wheel, and win limited-edition BazGym merch —
-              tumbler, towel &amp; recyclable bag.
+          <ScrollReveal delay={100}>
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-[#0c1a2e]/65">
+              Spin the big prize wheel on carnival day — 25 slots. Take on strength challenges for
+              fun on this page.
             </p>
           </ScrollReveal>
 
-          {/* Merch prize posters */}
-          <ScrollReveal delay={200}>
-            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-5">
+          {/* Grand prize banner */}
+          <ScrollReveal delay={150}>
+            <div className="mt-12 overflow-hidden rounded-[2rem] border-2 border-[#ffc93c]/60 bg-gradient-to-br from-[#0c1a2e] via-[#1a2744] to-[#0c1a2e] shadow-2xl shadow-[#ffc93c]/15">
+              <div className="grid items-center gap-0 md:grid-cols-[1.1fr_1fr]">
+                <div className="relative min-h-[220px] w-full bg-black/20 md:min-h-[280px]">
+                  <Image
+                    src={GRAND_PRIZE.src}
+                    alt={GRAND_PRIZE.label}
+                    fill
+                    className="object-contain p-4 md:p-6"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                <div className="px-6 py-8 text-left md:px-10">
+                  <p className="font-display text-xs font-bold uppercase tracking-[0.3em] text-[#ffc93c]">
+                    ★ Grand prize
+                  </p>
+                  <h3 className="font-display mt-3 text-3xl font-bold leading-tight text-white md:text-4xl">
+                    {GRAND_PRIZE.label}
+                  </h3>
+                  <p className="mt-3 text-sm text-white/60">{GRAND_PRIZE.note}</p>
+                  <p className="mt-4 text-xs text-white/40">
+                    Prize wheel: 1 grand slot + prizes 2–9 each ×3 = 25 slots total
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Mystery crochet tease */}
+          <ScrollReveal delay={180}>
+            <div className="mt-6 flex flex-col items-center gap-4 rounded-3xl border border-[#a78bfa]/30 bg-white/80 p-4 sm:flex-row sm:text-left">
+              <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#0c1a2e]/5 sm:h-32 sm:w-32">
+                <Image
+                  src={MYSTERY_CROCHET.src}
+                  alt={MYSTERY_CROCHET.label}
+                  fill
+                  className="object-contain p-2"
+                  sizes="128px"
+                />
+              </div>
+              <div>
+                <p className="font-display text-sm font-bold uppercase tracking-wider text-[#a78bfa]">
+                  Blind-box rare
+                </p>
+                <p className="font-display mt-1 text-xl font-bold text-[#0c1a2e]">
+                  {MYSTERY_CROCHET.label}
+                </p>
+                <p className="mt-1 text-sm text-[#0c1a2e]/55">{MYSTERY_CROCHET.note}</p>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* 8 prizes — 4 × 2 */}
+          <ScrollReveal delay={220}>
+            <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
               {CARNIVAL_PRIZES.map((prize) => (
                 <div
                   key={prize.id}
-                  className="group overflow-hidden rounded-3xl border border-[#0c1a2e]/8 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                  className="group flex flex-col overflow-hidden rounded-3xl border border-[#0c1a2e]/8 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden bg-[#f5f8fc]">
+                  <div className="relative aspect-square w-full bg-[#f5f8fc]">
                     <Image
                       src={prize.src}
                       alt={prize.label}
                       fill
-                      className="object-cover object-top transition duration-500 group-hover:scale-[1.02]"
-                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="object-contain p-2 transition duration-500 group-hover:scale-[1.02] md:p-3"
+                      sizes="(max-width: 768px) 50vw, 25vw"
                     />
                   </div>
-                  <div className="px-4 py-3 text-center">
-                    <p className="font-display text-base font-bold text-[#0c1a2e]">
-                      {prize.label}
+                  <div className="flex flex-1 flex-col justify-center px-2 py-3 text-center md:px-3">
+                    <p className="font-display text-xs font-bold leading-snug text-[#0c1a2e] md:text-sm">
+                      {prize.shortLabel}
                     </p>
+                    {prize.note && (
+                      <p className="mt-1 text-[0.65rem] leading-snug text-[#0c1a2e]/45">
+                        {prize.note}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           </ScrollReveal>
 
+          {/* Strength challenge wheel */}
           <ScrollReveal delay={300}>
             <div className="relative mx-auto mt-16 flex flex-col items-center">
-              <p className="mb-6 font-display text-lg font-bold text-[#0c1a2e]">
-                🎡 Spin the prize wheel
+              <p className="mb-2 font-display text-2xl font-bold text-[#0c1a2e] md:text-3xl">
+                💪 Strength challenge
+              </p>
+              <p className="mb-6 max-w-md text-sm text-[#0c1a2e]/50">
+                Tap to spin — get a skill to try. Real prize wheel is on carnival day.
               </p>
               <div className="wheel-pointer relative z-10 -mb-3 text-2xl text-[#ff5c4d]">▼</div>
               <button
                 type="button"
                 onClick={spinWheel}
                 disabled={wheelSpinning}
-                aria-label="Spin the carnival prize wheel"
+                aria-label="Spin the strength challenge wheel"
                 className="relative h-56 w-56 rounded-full shadow-2xl transition hover:scale-105 disabled:opacity-80 md:h-72 md:w-72"
                 style={{
                   transform: `rotate(${wheelRotation}deg)`,
@@ -487,27 +553,16 @@ export function PosterLanding() {
                 </div>
               </button>
               {wheelResult && (
-                <div className="mt-10 flex max-w-sm flex-col items-center rounded-3xl border-2 border-[#0c1a2e]/10 bg-white p-5 shadow-lg">
-                  <div className="relative h-28 w-28 overflow-hidden rounded-2xl">
-                    <Image
-                      src={wheelResult.src}
-                      alt={wheelResult.label}
-                      fill
-                      className="object-cover"
-                      sizes="112px"
-                    />
-                  </div>
-                  <p className="font-display mt-4 text-xl font-bold text-[#0c1a2e]">
-                    You won:{" "}
+                <div className="mt-10 max-w-sm rounded-3xl border-2 border-[#0c1a2e]/10 bg-white px-8 py-6 shadow-lg">
+                  <p className="text-4xl">{wheelResult.emoji}</p>
+                  <p className="font-display mt-3 text-2xl font-bold text-[#0c1a2e]">
+                    Your challenge:{" "}
                     <span className="text-poster-gradient">{wheelResult.label}!</span>
-                  </p>
-                  <p className="mt-1 text-xs text-[#0c1a2e]/45">
-                    Preview only — win merch on carnival day
                   </p>
                 </div>
               )}
               <p className="mt-4 text-sm text-[#0c1a2e]/40">
-                {wheelSpinning ? "Spinning…" : "Tap the wheel for a fun peek at the prizes"}
+                {wheelSpinning ? "Spinning…" : "Tap for a strength challenge"}
               </p>
             </div>
           </ScrollReveal>
@@ -608,56 +663,76 @@ export function PosterLanding() {
         </div>
       </section>
 
-      {/* ── SCHEDULE ── */}
+      {/* ── PROGRAMME — two tracks ── */}
       <section className="bg-[#fff8f0] px-6 py-24">
-        <div className="mx-auto max-w-2xl w-full">
+        <div className="mx-auto max-w-6xl w-full">
           <ScrollReveal>
             <h2 className="font-display text-center text-4xl font-bold text-[#0c1a2e] md:text-5xl">
               Programme
             </h2>
-            <div className="mt-8 flex justify-center gap-2">
-              {(["Day 1 — 5 Sept 2026", "Day 2 — 6 Sept 2026"] as const).map((label, i) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => setActiveDay(i as 0 | 1)}
-                  className={`rounded-full px-5 py-2 font-display text-sm font-bold transition ${
-                    activeDay === i
-                      ? "bg-[#0c1a2e] text-white"
-                      : "bg-[#0c1a2e]/8 text-[#0c1a2e]/55 hover:bg-[#0c1a2e]/12"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            <p className="mt-3 text-center text-sm text-[#0c1a2e]/45">
+              Both days · 5 &amp; 6 September 2026 · times approximate
+            </p>
           </ScrollReveal>
 
-          <ScrollReveal delay={200}>
-            <div className="relative mt-10 pl-8">
-              <div className="schedule-line absolute bottom-0 left-[11px] top-0 w-0.5 rounded-full" />
-              {SCHEDULE[activeDay].map((item) => (
-                <div key={`${activeDay}-${item.time}`} className="relative pb-8 last:pb-0">
-                  <div
-                    className={`absolute left-0 top-1.5 h-[22px] w-[22px] rounded-full border-[3px] border-[#fff8f0] ${
-                      item.star ? "bg-[#ffc93c]" : "bg-[#0c1a2e]/20"
-                    }`}
-                  />
-                  <p className="font-display text-sm font-bold text-[#ff5c4d]">{item.time}</p>
-                  <p
-                    className={`mt-0.5 font-medium ${
-                      item.star ? "font-display text-lg font-bold text-[#0c1a2e]" : "text-[#0c1a2e]/65"
-                    }`}
-                  >
-                    {item.star && "★ "}
-                    {item.title}
-                  </p>
+          <ScrollReveal delay={150}>
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
+              {/* Performance Showcase */}
+              <div className="rounded-[2rem] border border-[#0c1a2e]/8 bg-white p-6 shadow-sm md:p-8">
+                <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-[#ff5c4d]">
+                  Track A
+                </p>
+                <h3 className="font-display mt-2 text-2xl font-bold text-[#0c1a2e] md:text-3xl">
+                  Performance Showcase
+                </h3>
+                <div className="relative mt-8 pl-8">
+                  <div className="schedule-line absolute bottom-0 left-[11px] top-0 w-0.5 rounded-full" />
+                  {PERFORMANCE_SCHEDULE.map((item) => (
+                    <div key={`perf-${item.time}`} className="relative pb-7 last:pb-0">
+                      <div
+                        className={`absolute left-0 top-1.5 h-[22px] w-[22px] rounded-full border-[3px] border-white ${
+                          item.star ? "bg-[#ffc93c]" : "bg-[#0c1a2e]/20"
+                        }`}
+                      />
+                      <p className="font-display text-sm font-bold text-[#ff5c4d]">{item.time}</p>
+                      <p
+                        className={`mt-0.5 font-medium ${
+                          item.star
+                            ? "font-display text-base font-bold text-[#0c1a2e]"
+                            : "text-[#0c1a2e]/65"
+                        }`}
+                      >
+                        {item.star && "★ "}
+                        {item.title}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Pop-up classes */}
+              <div className="rounded-[2rem] border border-[#0c1a2e]/8 bg-white p-6 shadow-sm md:p-8">
+                <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-[#3db8ff]">
+                  Track B
+                </p>
+                <h3 className="font-display mt-2 text-2xl font-bold text-[#0c1a2e] md:text-3xl">
+                  Pop-up classes
+                </h3>
+                <p className="mt-2 text-xs text-[#0c1a2e]/45">
+                  Estimated hourly slots — class names TBA
+                </p>
+                <div className="relative mt-6 pl-8">
+                  <div className="schedule-line absolute bottom-0 left-[11px] top-0 w-0.5 rounded-full" />
+                  {POPUP_SCHEDULE.map((item) => (
+                    <div key={`pop-${item.time}`} className="relative pb-7 last:pb-0">
+                      <div className="absolute left-0 top-1.5 h-[22px] w-[22px] rounded-full border-[3px] border-white bg-[#3db8ff]/40" />
+                      <p className="font-display text-sm font-bold text-[#3db8ff]">{item.time}</p>
+                      <p className="mt-0.5 font-medium text-[#0c1a2e]/65">{item.title}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <p className="mt-8 text-center text-sm text-[#0c1a2e]/35">
-              Times are approximate
-            </p>
           </ScrollReveal>
         </div>
       </section>
@@ -672,9 +747,6 @@ export function PosterLanding() {
             See you at
             <br />
             <span className="text-poster-gradient">the carnival.</span>
-          </p>
-          <p className="mx-auto mt-6 max-w-sm text-white/50">
-            No membership needed. Just bring socks, energy, and a smile.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <RegisterButton onClick={() => setRegisterOpen(true)} variant="primary">
@@ -714,23 +786,4 @@ export function PosterLanding() {
   );
 }
 
-const SCHEDULE = [
-  [
-    { time: "10:00", title: "Doors open — challenges & prizes", star: false },
-    { time: "10:30", title: "Pop-up classes begin", star: false },
-    { time: "11:00", title: "Student Moves Showcase — Session 1", star: false },
-    { time: "12:00", title: "Competitive Performance — Show 1", star: true },
-    { time: "14:00", title: "Student Moves Showcase — Session 2", star: false },
-    { time: "15:00", title: "Competitive Performance — Show 2", star: true },
-    { time: "17:00", title: "Carnival closes", star: false },
-  ],
-  [
-    { time: "10:00", title: "Doors open — challenges & prizes", star: false },
-    { time: "10:30", title: "Pop-up classes begin", star: false },
-    { time: "11:00", title: "Student Moves Showcase — Session 1", star: false },
-    { time: "12:00", title: "Competitive Performance — Show 1", star: true },
-    { time: "14:00", title: "Student Moves Showcase — Session 2", star: false },
-    { time: "15:00", title: "Competitive Performance — Show 2", star: true },
-    { time: "17:00", title: "Carnival closes — thanks for coming!", star: false },
-  ],
-] as const;
+

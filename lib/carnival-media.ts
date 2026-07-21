@@ -37,6 +37,18 @@ export const GRAND_PRIZE: PrizeItem = {
  * Prizes 2–9 for the carnival prize wheel.
  * On event day: each of these repeats 3× + 1 grand = 25 slots.
  */
+/** Featured under the $500 grand prize — crochet blind box mystery collection. */
+export const BLIND_BOX_PRIZE: PrizeItem = {
+  id: "blind-box",
+  label: "BazGym limited edition blind box crochet toy",
+  shortLabel: "Blind box crochet · Mystery collection",
+  note: "Includes rare mystery gymnast crochet",
+  src: "/media/prizes/prize-crochet-poster.jpg",
+  color: "#a78bfa",
+  imageFit: "contain",
+};
+
+/** Grid prizes (blind box is featured separately under grand prize). */
 export const CARNIVAL_PRIZES: PrizeItem[] = [
   {
     id: "voucher-50",
@@ -60,7 +72,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Uniform set",
     src: "/media/prizes/prize-uniform.jpg",
     color: "#ff7a3d",
-    imageFit: "cover",
+    imageFit: "contain",
   },
   {
     id: "tumbler",
@@ -68,7 +80,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Tumbler",
     src: "/media/prizes/bazgym-tumbler.jpg",
     color: "#0c1a2e",
-    imageFit: "cover",
+    imageFit: "contain",
   },
   {
     id: "towel",
@@ -76,7 +88,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Towel",
     src: "/media/prizes/bazgym-towel.jpg",
     color: "#6b7c93",
-    imageFit: "cover",
+    imageFit: "contain",
   },
   {
     id: "bag",
@@ -84,16 +96,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Recyclable bag",
     src: "/media/prizes/bazgym-recyclable-bag.jpg",
     color: "#ff5c4d",
-    imageFit: "cover",
-  },
-  {
-    id: "blind-box",
-    label: "BazGym limited edition blind box crochet toy",
-    shortLabel: "Blind box crochet",
-    note: "Mystery collection · includes rare gymnast crochet",
-    src: "/media/prizes/prize-crochet-poster.jpg",
-    color: "#a78bfa",
-    imageFit: "cover",
+    imageFit: "contain",
   },
   {
     id: "patch",
@@ -101,7 +104,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
     shortLabel: "Iron-on patch",
     src: "/media/prizes/prize-patch.jpg",
     color: "#34d399",
-    imageFit: "cover",
+    imageFit: "contain",
   },
 ];
 
@@ -111,7 +114,7 @@ export const CARNIVAL_PRIZES: PrizeItem[] = [
  */
 export function buildPrizeWheelSlots(): PrizeItem[] {
   const slots: PrizeItem[] = [GRAND_PRIZE];
-  for (const p of CARNIVAL_PRIZES) {
+  for (const p of [...CARNIVAL_PRIZES, BLIND_BOX_PRIZE]) {
     slots.push(p, p, p);
   }
   return slots;

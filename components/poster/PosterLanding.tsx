@@ -12,6 +12,7 @@ import {
   SectionBackdrop,
 } from "@/components/poster/SectionBackdrop";
 import {
+  BLIND_BOX_PRIZE,
   CARNIVAL_GALLERY,
   CARNIVAL_MEDIA,
   CARNIVAL_PRIZES,
@@ -370,26 +371,21 @@ export function PosterLanding() {
         </div>
       </section>
 
-      {/* ── PRIZES ── */}
-      <section id="spin" className="poster-section relative overflow-hidden bg-[#fff8f0] px-6 py-20">
-        <SectionBackdrop
-          src={CARNIVAL_MEDIA.spin}
-          alt=""
-          opacity={14}
-          overlay="from-[#fff8f0]/94 via-[#fff8f0]/90 to-[#fff8f0]/96"
-        />
+      {/* ── PRIZES (dark blue banner) ── */}
+      <section id="spin" className="poster-section relative overflow-hidden bg-[#0c1a2e] px-6 py-20">
+        <DarkSectionBackdrop src={CARNIVAL_MEDIA.spin} alt="" opacity={18} />
         <div className="relative z-10 mx-auto max-w-6xl w-full text-center">
           <ScrollReveal>
-            <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-[#a78bfa]">
+            <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-[#ffc93c]">
               03 — Prizes
             </p>
-            <h2 className="font-display mt-4 text-[clamp(2.5rem,10vw,5.5rem)] font-bold leading-none text-[#0c1a2e]">
+            <h2 className="font-display mt-4 text-[clamp(2.5rem,10vw,5.5rem)] font-bold leading-none text-white">
               Spin for prizes.
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={100}>
-            <p className="mx-auto mt-6 max-w-2xl text-xl text-[#0c1a2e]/65">
+            <p className="mx-auto mt-6 max-w-2xl text-xl text-white/60">
               Big prize wheel on carnival day — 25 slots. Grand prize plus limited-edition merch
               &amp; e-vouchers.
             </p>
@@ -397,7 +393,7 @@ export function PosterLanding() {
 
           {/* Grand prize — full-bleed image banner */}
           <ScrollReveal delay={150}>
-            <div className="relative mt-12 overflow-hidden rounded-[2rem] border-2 border-[#ffc93c]/60 shadow-2xl shadow-[#ffc93c]/15">
+            <div className="relative mt-12 overflow-hidden rounded-[2rem] border-2 border-[#ffc93c]/50 shadow-2xl shadow-[#ffc93c]/20">
               <div className="relative aspect-[16/10] w-full min-h-[220px] sm:aspect-[21/9] sm:min-h-[280px] md:min-h-[340px]">
                 <Image
                   src={GRAND_PRIZE.src}
@@ -407,7 +403,7 @@ export function PosterLanding() {
                   sizes="(max-width: 768px) 100vw, 1152px"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1a2e]/90 via-[#0c1a2e]/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1a2e]/90 via-[#0c1a2e]/20 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-left sm:p-8">
                   <p className="font-display text-xs font-bold uppercase tracking-[0.3em] text-[#ffc93c]">
                     ★ Grand prize
@@ -424,28 +420,56 @@ export function PosterLanding() {
             </div>
           </ScrollReveal>
 
-          {/* 8 prizes — 4 × 2 */}
+          {/* Crochet blind box — featured right under grand prize */}
+          <ScrollReveal delay={180}>
+            <div className="mt-6 overflow-hidden rounded-[2rem] border border-white/15 bg-white shadow-xl">
+              <div className="grid items-stretch md:grid-cols-[1.15fr_0.85fr]">
+                <div className="relative min-h-[320px] w-full bg-[#1a0b2e] sm:min-h-[400px] md:min-h-[480px]">
+                  <Image
+                    src={BLIND_BOX_PRIZE.src}
+                    alt={BLIND_BOX_PRIZE.label}
+                    fill
+                    className="object-contain object-center p-3 sm:p-4"
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                  />
+                </div>
+                <div className="flex flex-col justify-center px-6 py-8 text-left md:px-10">
+                  <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-[#a78bfa]">
+                    Limited edition
+                  </p>
+                  <h3 className="font-display mt-3 text-2xl font-bold leading-tight text-[#0c1a2e] md:text-3xl">
+                    Blind box crochet
+                  </h3>
+                  <p className="mt-2 text-base font-semibold text-[#0c1a2e]/70">
+                    Mystery collection
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-[#0c1a2e]/55">
+                    {BLIND_BOX_PRIZE.note}. Collect Ribbit, Teddy, Hammy, crochet cheesecake wedge
+                    — or the rare mystery gymnast figure.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Other prizes — 4 + 3 grid */}
           <ScrollReveal delay={220}>
             <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
               {CARNIVAL_PRIZES.map((prize) => {
-                const fit = prize.imageFit ?? "cover";
+                const fit = prize.imageFit ?? "contain";
                 return (
                   <div
                     key={prize.id}
-                    className="group flex flex-col overflow-hidden rounded-3xl border border-[#0c1a2e]/8 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                    className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
                   >
-                    <div
-                      className={`relative w-full bg-[#f5f8fc] ${
-                        prize.id === "blind-box" ? "aspect-[3/4]" : "aspect-square"
-                      }`}
-                    >
+                    <div className="relative aspect-square w-full bg-[#f5f8fc]">
                       <Image
                         src={prize.src}
                         alt={prize.label}
                         fill
                         className={`${
                           fit === "contain"
-                            ? "object-contain p-1"
+                            ? "object-contain p-1.5"
                             : "object-cover object-center"
                         } transition duration-500 group-hover:scale-[1.03]`}
                         sizes="(max-width: 768px) 50vw, 25vw"
@@ -455,11 +479,6 @@ export function PosterLanding() {
                       <p className="font-display text-xs font-bold leading-snug text-[#0c1a2e] md:text-sm">
                         {prize.shortLabel}
                       </p>
-                      {prize.note && (
-                        <p className="mt-1 text-[0.65rem] leading-snug text-[#0c1a2e]/45">
-                          {prize.note}
-                        </p>
-                      )}
                     </div>
                   </div>
                 );
@@ -469,15 +488,23 @@ export function PosterLanding() {
         </div>
       </section>
 
-      {/* ── STRENGTH CHALLENGE (was Celebrate) ── */}
-      <section id="challenge" className="poster-section relative overflow-hidden bg-[#0c1a2e] px-6">
-        <DarkSectionBackdrop src={CARNIVAL_MEDIA.celebrate} alt="" opacity={24} />
+      {/* ── STRENGTH CHALLENGE (white banner) ── */}
+      <section
+        id="challenge"
+        className="poster-section relative overflow-hidden bg-[#fff8f0] px-6 py-20"
+      >
+        <SectionBackdrop
+          src={CARNIVAL_MEDIA.celebrate}
+          alt=""
+          opacity={12}
+          overlay="from-[#fff8f0]/94 via-[#fff8f0]/90 to-[#fff8f0]/96"
+        />
         <div className="relative z-10 mx-auto max-w-6xl w-full">
           <ScrollReveal>
             <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-[#34d399]">
               04 — Fringe Activities
             </p>
-            <h2 className="font-display mt-4 text-[clamp(2.5rem,12vw,7rem)] font-bold leading-none text-white">
+            <h2 className="font-display mt-4 text-[clamp(2.5rem,12vw,7rem)] font-bold leading-none text-[#0c1a2e]">
               Strength
               <br />
               <span className="text-poster-gradient">Challenge.</span>
@@ -485,14 +512,14 @@ export function PosterLanding() {
           </ScrollReveal>
 
           <ScrollReveal delay={150}>
-            <p className="mt-6 max-w-xl text-xl leading-relaxed text-white/65 md:text-2xl">
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-[#0c1a2e]/60 md:text-2xl">
               Tap the wheel for a skill to try — cartwheels, holds, balances &amp; more.
             </p>
           </ScrollReveal>
 
           <ScrollReveal delay={250}>
             <div className="relative mx-auto mt-14 flex flex-col items-center">
-              <div className="wheel-pointer relative z-10 -mb-3 text-2xl text-[#ffc93c]">▼</div>
+              <div className="wheel-pointer relative z-10 -mb-3 text-2xl text-[#ff5c4d]">▼</div>
               <button
                 type="button"
                 onClick={spinWheel}
@@ -512,21 +539,21 @@ export function PosterLanding() {
                 }}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0c1a2e] font-display text-xs font-bold text-white shadow-lg ring-2 ring-white/20 md:h-20 md:w-20 md:text-sm">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0c1a2e] font-display text-xs font-bold text-white shadow-lg md:h-20 md:w-20 md:text-sm">
                     SPIN
                   </div>
                 </div>
               </button>
               {wheelResult && (
-                <div className="mt-10 max-w-sm rounded-3xl border border-white/15 bg-white/10 px-8 py-6 text-center backdrop-blur-sm">
+                <div className="mt-10 max-w-sm rounded-3xl border-2 border-[#0c1a2e]/10 bg-white px-8 py-6 text-center shadow-lg">
                   <p className="text-4xl">{wheelResult.emoji}</p>
-                  <p className="font-display mt-3 text-2xl font-bold text-white">
+                  <p className="font-display mt-3 text-2xl font-bold text-[#0c1a2e]">
                     Your challenge:{" "}
                     <span className="text-poster-gradient">{wheelResult.label}!</span>
                   </p>
                 </div>
               )}
-              <p className="mt-4 text-sm text-white/40">
+              <p className="mt-4 text-sm text-[#0c1a2e]/40">
                 {wheelSpinning ? "Spinning…" : "Tap for a strength challenge"}
               </p>
             </div>

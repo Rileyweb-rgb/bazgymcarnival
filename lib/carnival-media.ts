@@ -10,49 +10,28 @@ export const CARNIVAL_MEDIA = {
   competitivePerformanceVideo: "/media/competitive-performance.mp4",
 } as const;
 
-/** Carnival fun & games prizes (spin the wheel). */
+/** Limited-edition merch prizes (spin the wheel + gallery). */
 export const CARNIVAL_PRIZES = [
   {
-    id: "crochet",
-    label: "Crochet plush",
-    emoji: "🧶",
-    src: "/media/prizes/crochet-plush.jpg",
-    color: "#ffc93c",
+    id: "tumbler",
+    label: "BazGym Tumbler",
+    emoji: "🥤",
+    src: "/media/prizes/bazgym-tumbler.jpg",
+    color: "#0c1a2e",
   },
   {
-    id: "bottle",
-    label: "Water bottle",
-    emoji: "💧",
-    src: "/media/prizes/water-bottle.jpg",
+    id: "towel",
+    label: "BazGym Towel",
+    emoji: "🧼",
+    src: "/media/prizes/bazgym-towel.jpg",
     color: "#3db8ff",
   },
   {
-    id: "gift",
-    label: "Gift surprise",
-    emoji: "🎁",
-    src: "/media/prizes/gift-box.jpg",
+    id: "bag",
+    label: "Recyclable Bag",
+    emoji: "🛍️",
+    src: "/media/prizes/bazgym-recyclable-bag.jpg",
     color: "#ff5c4d",
-  },
-  {
-    id: "teddy",
-    label: "Teddy plush",
-    emoji: "🧸",
-    src: "/media/prizes/teddy-plush.jpg",
-    color: "#ff4d8d",
-  },
-  {
-    id: "stickers",
-    label: "Stickers & keychain",
-    emoji: "✨",
-    src: "/media/prizes/keychain-stickers.jpg",
-    color: "#a78bfa",
-  },
-  {
-    id: "goodie",
-    label: "Goodie bag",
-    emoji: "🎒",
-    src: "/media/prizes/goodie-bag.jpg",
-    color: "#34d399",
   },
 ] as const;
 

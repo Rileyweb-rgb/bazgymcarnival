@@ -424,34 +424,31 @@ export function PosterLanding() {
 
           <ScrollReveal delay={150}>
             <p className="mx-auto mt-6 max-w-xl text-xl text-[#0c1a2e]/65">
-              Take on carnival challenges, spin the wheel, and win cute prizes — crochet toys, plush,
-              water bottles, goodie bags &amp; more.
+              Take on carnival challenges, spin the wheel, and win limited-edition BazGym merch —
+              tumbler, towel &amp; recyclable bag.
             </p>
           </ScrollReveal>
 
-          {/* Prize gallery */}
+          {/* Merch prize posters */}
           <ScrollReveal delay={200}>
-            <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-5">
               {CARNIVAL_PRIZES.map((prize) => (
                 <div
                   key={prize.id}
                   className="group overflow-hidden rounded-3xl border border-[#0c1a2e]/8 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <div className="relative aspect-square overflow-hidden bg-[#fff8f0]">
+                  <div className="relative aspect-[3/4] overflow-hidden bg-[#f5f8fc]">
                     <Image
                       src={prize.src}
                       alt={prize.label}
                       fill
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                      sizes="(max-width: 640px) 50vw, 200px"
+                      className="object-cover object-top transition duration-500 group-hover:scale-[1.02]"
+                      sizes="(max-width: 640px) 100vw, 33vw"
                     />
                   </div>
-                  <div className="px-3 py-3 text-left">
-                    <p className="font-display text-sm font-bold text-[#0c1a2e]">
-                      {prize.emoji} {prize.label}
-                    </p>
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-[#0c1a2e]/40">
-                      Carnival prize
+                  <div className="px-4 py-3 text-center">
+                    <p className="font-display text-base font-bold text-[#0c1a2e]">
+                      {prize.label}
                     </p>
                   </div>
                 </div>
@@ -502,12 +499,10 @@ export function PosterLanding() {
                   </div>
                   <p className="font-display mt-4 text-xl font-bold text-[#0c1a2e]">
                     You won:{" "}
-                    <span className="text-poster-gradient">
-                      {wheelResult.emoji} {wheelResult.label}!
-                    </span>
+                    <span className="text-poster-gradient">{wheelResult.label}!</span>
                   </p>
                   <p className="mt-1 text-xs text-[#0c1a2e]/45">
-                    Preview only — real prizes on carnival day
+                    Preview only — win merch on carnival day
                   </p>
                 </div>
               )}

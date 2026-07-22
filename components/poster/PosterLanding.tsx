@@ -239,7 +239,8 @@ export function PosterLanding() {
 
           <ScrollReveal delay={150}>
             <p className="mt-6 max-w-xl text-xl leading-relaxed text-white/80 md:text-2xl">
-              Walk in curious, walk out tumbling. Free trial classes — zero experience needed.
+              Walk in curious, walk out tumbling. Pop-up classes for all levels — zero experience
+              needed.
             </p>
           </ScrollReveal>
 
@@ -259,7 +260,10 @@ export function PosterLanding() {
                 Tiny → Intermediate
               </p>
               <p className="mt-3 text-lg text-white/75">
-                with Andrew &amp; Cheechia · Both days · 5 &amp; 6 Sept
+                with BazGym coaches · Both days · 5 &amp; 6 Sept
+              </p>
+              <p className="mt-2 font-display text-base font-bold text-white/90">
+                $25 per class
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 {POPUP_CLASS_TAGS.map((tag) => (
@@ -324,7 +328,7 @@ export function PosterLanding() {
                     controls
                     preload="metadata"
                     poster={CARNIVAL_MEDIA.competitivePerformancePhoto}
-                    aria-label="Competitive performance highlights from BazGym Carnival 2025"
+                    aria-label="Competitive team performance highlights from BazGym Carnival 2025"
                   >
                     <source
                       src={CARNIVAL_MEDIA.competitivePerformanceVideo}
@@ -335,10 +339,11 @@ export function PosterLanding() {
                 <div className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
                   <div>
                     <p className="font-display text-3xl font-bold md:text-4xl">
-                      Competitive Performance
+                      Competitive Team Performance
                     </p>
                     <p className="mt-2 text-lg text-[#0c1a2e]/55">
-                      Highlights from Carnival 2025 — back bigger this September
+                      Boys competitive team — highlights from Carnival 2025, back bigger this
+                      September
                     </p>
                     <p className="mt-2 text-sm font-semibold text-[#ff5c4d]">
                       Live showcase on 5 September
@@ -351,11 +356,24 @@ export function PosterLanding() {
                 <div className="relative aspect-[16/9] w-full md:aspect-[21/9]">
                   <Image
                     src={CARNIVAL_MEDIA.competitivePerformancePhoto}
-                    alt="Competitive squad performing stunts at BazGym Carnival"
+                    alt="Girls competitive team performing at BazGym Carnival"
                     fill
                     className="object-cover object-center"
                     sizes="(max-width: 768px) 100vw, 1152px"
                   />
+                </div>
+                <div className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
+                  <div>
+                    <p className="font-display text-3xl font-bold md:text-4xl">
+                      Girls Competitive Team Performance
+                    </p>
+                    <p className="mt-2 text-lg text-[#0c1a2e]/55">
+                      Power, precision, and podium energy — our girls competitive squad on stage
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-[#ff5c4d]">
+                      Live showcase on 5 September
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -470,7 +488,7 @@ export function PosterLanding() {
         <div className="relative z-10 mx-auto max-w-6xl w-full">
           <ScrollReveal>
             <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-[#34d399]">
-              04 — Fringe Activities
+              04 — Challenge yourself and win more prizes
             </p>
             <h2 className="font-display mt-4 text-[clamp(2.5rem,12vw,7rem)] font-bold leading-none text-[#0c1a2e]">
               Strength
@@ -481,7 +499,7 @@ export function PosterLanding() {
 
           <ScrollReveal delay={150}>
             <p className="mt-6 max-w-xl text-xl leading-relaxed text-[#0c1a2e]/70 md:text-2xl">
-              Challenge yourself and win more prizes!
+              Take on the stations, stack the wins, and walk away with more prizes.
             </p>
           </ScrollReveal>
 
@@ -569,10 +587,10 @@ export function PosterLanding() {
                   <div className="flex justify-between gap-4">
                     <dt className="font-bold text-[#0c1a2e]/45">Entry</dt>
                     <dd className="text-right font-display font-bold text-[#ff5c4d]">
-                      Register now
+                      Pop-up class $25
                       <br />
                       <span className="text-base font-semibold text-[#0c1a2e]/55">
-                        Pricing shared at registration
+                        Register ahead to secure a slot
                       </span>
                     </dd>
                   </div>

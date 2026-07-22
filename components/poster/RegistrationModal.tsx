@@ -553,14 +553,13 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                       Membership <span className="text-[#ff5c4d]">*</span>
                     </legend>
                     <p className="mb-3 text-xs text-[#0c1a2e]/45">
-                      HomeTeamNS members pay a different rate — the correct PayNow QR will show on
-                      the next step.
+                      Select one — the matching PayNow QR will show on the next step.
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {MEMBERSHIP_OPTIONS.map((opt) => (
                         <label
                           key={opt.id}
-                          className={`flex cursor-pointer flex-col rounded-2xl border-2 p-4 transition ${
+                          className={`flex cursor-pointer items-center justify-center rounded-2xl border-2 p-4 transition ${
                             form.membershipType === opt.id
                               ? "border-[#ff5c4d] bg-[#ff5c4d]/8"
                               : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
@@ -577,11 +576,8 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                             className="sr-only"
                             required
                           />
-                          <span className="font-display text-sm font-bold text-[#0c1a2e]">
+                          <span className="font-display text-center text-sm font-bold text-[#0c1a2e]">
                             {opt.label}
-                          </span>
-                          <span className="mt-1 text-xs font-semibold text-[#ff5c4d]">
-                            {opt.price}
                           </span>
                         </label>
                       ))}
@@ -631,8 +627,10 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                       Scan to pay with {PAYMENT_CONFIG.paymentMethod}
                     </p>
                     <p className="mt-1 text-sm text-[#0c1a2e]/55">
-                      {membership.label} ·{" "}
-                      <span className="font-bold text-[#ff5c4d]">{membership.price}</span>
+                      {membership.label}
+                    </p>
+                    <p className="mt-1 font-display text-lg font-bold text-[#ff5c4d]">
+                      {membership.price}
                     </p>
                     <QrCanvas seed={membership.qrSeed} size={220} className="mt-4" />
                     <p className="mt-3 inline-block rounded-full bg-[#ffc93c]/25 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#8a6100]">
@@ -692,7 +690,7 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                   <p className="text-xs text-[#0c1a2e]/45">
                     Registering for: <strong>{form.childName}</strong> · {summaryLine}
                     <br />
-                    {membership.label} · {membership.price}
+                    {membership.label}
                   </p>
 
                   {error && <ErrorBox message={error} />}

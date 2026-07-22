@@ -11,8 +11,8 @@ export const MEMBERSHIP_OPTIONS: {
     id: "hometeamns",
     label: "HomeTeamNS member",
     shortLabel: "HomeTeamNS",
-    // Dummy prices — replace when final fees are confirmed
-    price: process.env.NEXT_PUBLIC_TICKET_PRICE_HOMETEAMNS ?? "$10",
+    // Pop-up class fee is $25; HTNS vs non may still use different PayNow QRs
+    price: process.env.NEXT_PUBLIC_TICKET_PRICE_HOMETEAMNS ?? "$25",
     qrSeed:
       process.env.NEXT_PUBLIC_PAYNOW_QR_SEED_HOMETEAMNS ??
       "BAZGYM-PAYNOW-HOMETEAMNS-DUMMY",
@@ -21,7 +21,7 @@ export const MEMBERSHIP_OPTIONS: {
     id: "non-hometeamns",
     label: "Non-HomeTeamNS member",
     shortLabel: "Non-member",
-    price: process.env.NEXT_PUBLIC_TICKET_PRICE_NON_HOMETEAMNS ?? "$15",
+    price: process.env.NEXT_PUBLIC_TICKET_PRICE_NON_HOMETEAMNS ?? "$25",
     qrSeed:
       process.env.NEXT_PUBLIC_PAYNOW_QR_SEED_NON_HOMETEAMNS ??
       "BAZGYM-PAYNOW-NONMEMBER-DUMMY",
@@ -30,10 +30,10 @@ export const MEMBERSHIP_OPTIONS: {
 
 export const PAYMENT_CONFIG = {
   paymentMethod: process.env.NEXT_PUBLIC_PAYMENT_METHOD ?? "PayNow",
-  /** Fallback single price (legacy). Prefer membership-specific prices. */
-  ticketPrice: process.env.NEXT_PUBLIC_TICKET_PRICE ?? "$15",
+  /** Pop-up class fee */
+  ticketPrice: process.env.NEXT_PUBLIC_TICKET_PRICE ?? "$25",
   paynowQrSeed:
-    process.env.NEXT_PUBLIC_PAYNOW_QR_SEED ?? "BAZGYM-PAYNOW-15",
+    process.env.NEXT_PUBLIC_PAYNOW_QR_SEED ?? "BAZGYM-PAYNOW-25",
   instructions:
     "Scan the QR with your banking app, pay the ticket fee, screenshot the receipt, then upload it below.",
 } as const;

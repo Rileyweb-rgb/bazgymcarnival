@@ -2,10 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { QrCanvas } from "@/components/poster/QrCanvas";
-import { PAYMENT_CONFIG } from "@/lib/payment-config";
+import {
+  getMembershipOption,
+  MEMBERSHIP_OPTIONS,
+  PAYMENT_CONFIG,
+  type MembershipType,
+} from "@/lib/payment-config";
 import {
   PERFORMANCE_FORM_URL,
   PREFERRED_DAY_LABELS,
+  PREFERRED_TIME_DETAILS,
   PREFERRED_TIME_LABELS,
   PREFERRED_TIME_SLOTS,
   type PreferredDay,
@@ -29,6 +35,7 @@ type FormState = {
   childDateOfBirth: string;
   preferredDay: PreferredDay | "";
   preferredTime: PreferredTime | "";
+  membershipType: MembershipType | "";
   waiverAccepted: boolean;
 };
 
@@ -42,6 +49,7 @@ const INITIAL: FormState = {
   childDateOfBirth: "",
   preferredDay: "",
   preferredTime: "",
+  membershipType: "",
   waiverAccepted: false,
 };
 
@@ -66,6 +74,9 @@ function validateStep1(form: FormState): string | null {
   }
   if (!form.preferredTime) {
     return "Please select a preferred time.";
+  }
+  if (!form.membershipType) {
+    return "Please select HomeTeamNS membership status.";
   }
   if (!form.waiverAccepted) {
     return "You must accept the waiver before registering.";
@@ -167,6 +178,9 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
             ? "Payment"
             : "Your Ticket";
 
+  const membership =
+    form.membershipType !== "" ? getMembershipOption(form.membershipType) : null;
+
   const summaryLine =
     form.preferredDay && form.preferredTime
       ? `${PREFERRED_DAY_LABELS[form.preferredDay]} · ${PREFERRED_TIME_LABELS[form.preferredTime]}`
@@ -226,6 +240,7 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
           childDateOfBirth: form.childDateOfBirth,
           preferredDay: form.preferredDay,
           preferredTime: form.preferredTime,
+          membershipType: form.membershipType,
           waiverAccepted: form.waiverAccepted,
         }),
       );
@@ -498,29 +513,75 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                       Preferred class time <span className="text-[#ff5c4d]">*</span>
                     </legend>
                     <p className="mb-3 text-xs text-[#0c1a2e]/45">
-                      Each hour is a different class — full schedule coming soon.
+                      Same classes both days. 12–1pm is performance / lunch (not bookable).
                     </p>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      {PREFERRED_TIME_SLOTS.map((slot) => (
+                    <div className="grid gap-2">
+                      {PREFERRED_TIME_SLOTS.map((slot) => {
+                        const detail = PREFERRED_TIME_DETAILS[slot];
+                        return (
+                          <label
+                            key={slot}
+                            className={`flex cursor-pointer flex-col rounded-2xl border-2 px-3 py-3 transition ${
+                              form.preferredTime === slot
+                                ? "border-[#3db8ff] bg-[#3db8ff]/10"
+                                : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="preferredTime"
+                              value={slot}
+                              checked={form.preferredTime === slot}
+                              onChange={() => setForm((f) => ({ ...f, preferredTime: slot }))}
+                              className="sr-only"
+                              required
+                            />
+                            <span className="font-display text-sm font-bold text-[#0c1a2e]">
+                              {PREFERRED_TIME_LABELS[slot]}
+                            </span>
+                            <span className="mt-0.5 text-xs text-[#0c1a2e]/50">
+                              {detail.venue} · {detail.age}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+
+                  <fieldset>
+                    <legend className="mb-3 text-sm font-bold text-[#0c1a2e]">
+                      Membership <span className="text-[#ff5c4d]">*</span>
+                    </legend>
+                    <p className="mb-3 text-xs text-[#0c1a2e]/45">
+                      HomeTeamNS members pay a different rate — the correct PayNow QR will show on
+                      the next step.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {MEMBERSHIP_OPTIONS.map((opt) => (
                         <label
-                          key={slot}
-                          className={`flex cursor-pointer items-center justify-center rounded-2xl border-2 px-2 py-3 transition ${
-                            form.preferredTime === slot
-                              ? "border-[#3db8ff] bg-[#3db8ff]/10"
+                          key={opt.id}
+                          className={`flex cursor-pointer flex-col rounded-2xl border-2 p-4 transition ${
+                            form.membershipType === opt.id
+                              ? "border-[#ff5c4d] bg-[#ff5c4d]/8"
                               : "border-[#0c1a2e]/10 bg-white hover:border-[#0c1a2e]/20"
                           }`}
                         >
                           <input
                             type="radio"
-                            name="preferredTime"
-                            value={slot}
-                            checked={form.preferredTime === slot}
-                            onChange={() => setForm((f) => ({ ...f, preferredTime: slot }))}
+                            name="membershipType"
+                            value={opt.id}
+                            checked={form.membershipType === opt.id}
+                            onChange={() =>
+                              setForm((f) => ({ ...f, membershipType: opt.id }))
+                            }
                             className="sr-only"
                             required
                           />
-                          <span className="font-display text-center text-xs font-bold text-[#0c1a2e] sm:text-sm">
-                            {PREFERRED_TIME_LABELS[slot]}
+                          <span className="font-display text-sm font-bold text-[#0c1a2e]">
+                            {opt.label}
+                          </span>
+                          <span className="mt-1 text-xs font-semibold text-[#ff5c4d]">
+                            {opt.price}
                           </span>
                         </label>
                       ))}
@@ -563,23 +624,24 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
                 </form>
               )}
 
-              {step === 2 && (
+              {step === 2 && membership && (
                 <div className="space-y-5">
                   <div className="rounded-2xl border-2 border-[#0c1a2e]/10 bg-white p-5 text-center">
                     <p className="font-display text-base font-bold text-[#0c1a2e]">
                       Scan to pay with {PAYMENT_CONFIG.paymentMethod}
                     </p>
                     <p className="mt-1 text-sm text-[#0c1a2e]/55">
-                      Ticket fee will be confirmed at registration
+                      {membership.label} ·{" "}
+                      <span className="font-bold text-[#ff5c4d]">{membership.price}</span>
                     </p>
-                    <QrCanvas seed={PAYMENT_CONFIG.paynowQrSeed} size={220} className="mt-4" />
+                    <QrCanvas seed={membership.qrSeed} size={220} className="mt-4" />
                     <p className="mt-3 inline-block rounded-full bg-[#ffc93c]/25 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-[#8a6100]">
-                      Placeholder QR — final PayNow code coming soon
+                      Dummy QR — final {membership.shortLabel} PayNow code coming soon
                     </p>
                     <p className="mt-3 text-xs leading-relaxed text-[#0c1a2e]/55">
                       1. Scan the QR with your banking app
                       <br />
-                      2. Complete payment and screenshot the receipt
+                      2. Pay {membership.price} and screenshot the receipt
                       <br />
                       3. Upload the screenshot below
                     </p>
@@ -629,6 +691,8 @@ export function RegistrationModal({ open, onClose }: RegistrationModalProps) {
 
                   <p className="text-xs text-[#0c1a2e]/45">
                     Registering for: <strong>{form.childName}</strong> · {summaryLine}
+                    <br />
+                    {membership.label} · {membership.price}
                   </p>
 
                   {error && <ErrorBox message={error} />}

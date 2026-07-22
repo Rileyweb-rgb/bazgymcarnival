@@ -1,11 +1,12 @@
 import { generateAttendeeCode } from "@/lib/attendee-code";
 import { appendToGoogleSheet } from "@/lib/google-sheets";
 import {
+  getMembershipOption,
   PAYMENT_SCREENSHOT_MAX_BYTES,
   PAYMENT_SCREENSHOT_TYPES,
-  PAYMENT_CONFIG,
 } from "@/lib/payment-config";
 import {
+  MEMBERSHIP_LABELS,
   PREFERRED_DAY_LABELS,
   PREFERRED_TIME_LABELS,
   validateRegistration,
@@ -69,15 +70,17 @@ export async function POST(request: Request) {
   const paymentScreenshotBase64 = buffer.toString("base64");
   const attendeeCode = generateAttendeeCode();
   const { data } = result;
+  const membership = getMembershipOption(data.membershipType);
 
   const record = {
     ...data,
     preferredDayLabel: PREFERRED_DAY_LABELS[data.preferredDay],
     preferredTimeLabel: PREFERRED_TIME_LABELS[data.preferredTime],
+    membershipLabel: MEMBERSHIP_LABELS[data.membershipType],
     submittedAt: new Date().toISOString(),
     event: "BazGym Carnival 2026",
     attendeeCode,
-    ticketPrice: PAYMENT_CONFIG.ticketPrice,
+    ticketPrice: `${membership.price} (${MEMBERSHIP_LABELS[data.membershipType]})`,
     paymentStatus: "pending" as const,
     paymentScreenshotBase64,
     paymentScreenshotMimeType: screenshot.type,

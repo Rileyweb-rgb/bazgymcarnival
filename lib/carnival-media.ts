@@ -4,11 +4,47 @@ export const CARNIVAL_MEDIA = {
   try: "/media/tiny-tots-class.png",
   spin: "/media/challenge-beam.png",
   celebrate: "/media/coaching-balance.png",
+  /** Parent + child high-five — strength challenge banner */
+  parentChildChallenge: "/media/parent-child-challenge.jpg",
   details: "/media/coaching-moment.png",
   groupStretch: "/media/group-stretch.png",
   competitivePerformancePhoto: "/media/competitive-performance.png",
   competitivePerformanceVideo: "/media/competitive-performance.mp4",
 } as const;
+
+/** Hover tags on the Try banner — class names + alt marketing names. */
+export const POPUP_CLASS_TAGS = [
+  {
+    id: "beginner-am",
+    label: "Beginner",
+    altNames: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+    detail: "10am – 11am · Atrium · 5.5 Y.O & above",
+  },
+  {
+    id: "tiny-mini",
+    label: "TinyBear & Minibear",
+    altNames: "Parent & Toddler fun · Little Movers/Explorers",
+    detail: "11am – 12pm · Gym · 2 – 4 Y.O",
+  },
+  {
+    id: "beginner-pm",
+    label: "Beginner",
+    altNames: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+    detail: "1pm – 2pm · Gym · 5.5 Y.O & above",
+  },
+  {
+    id: "gym-bear",
+    label: "Gym Bear",
+    altNames: "Junior/Adventure/Independent Gym",
+    detail: "2pm – 3pm · Atrium · 4 – 5 Y.O",
+  },
+  {
+    id: "intermediate",
+    label: "Intermediate",
+    altNames: "Gymnastics/Cartwheel in motion · Dynamic Movers · All Stars",
+    detail: "3pm – 4pm · Gym · Inter 1 & above",
+  },
+] as const;
 
 export type PrizeItem = {
   id: string;
@@ -159,6 +195,7 @@ export const CARNIVAL_GALLERY = [
   },
 ] as const;
 
+/** Performance Showcase — 5 September only. */
 export const PERFORMANCE_SCHEDULE = [
   { time: "10:00 – 10:45", title: "Mini Bear & Gym Bear", star: false },
   { time: "11:15 – 12:00", title: "Beginner", star: false },
@@ -168,12 +205,42 @@ export const PERFORMANCE_SCHEDULE = [
   { time: "16:00 – 16:30", title: "Advanced (Exhibition)", star: true },
 ] as const;
 
-/** Estimated pop-up class blocks (aligned with registration hourly slots). */
+/** Pop-up classes — both 5 & 6 September. */
 export const POPUP_SCHEDULE = [
-  { time: "10:00 – 11:00", title: "Pop-up class slot 1", star: false },
-  { time: "11:00 – 12:00", title: "Pop-up class slot 2", star: false },
-  { time: "12:00 – 13:00", title: "Pop-up class slot 3", star: false },
-  { time: "13:00 – 14:00", title: "Pop-up class slot 4", star: false },
-  { time: "14:00 – 15:00", title: "Pop-up class slot 5", star: false },
-  { time: "15:00 – 16:00", title: "Pop-up class slot 6", star: false },
+  {
+    time: "10:00 – 11:00",
+    title: "Beginner (Atrium, 5.5 Y.O & above)",
+    subtitle: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+    star: false,
+  },
+  {
+    time: "11:00 – 12:00",
+    title: "TinyBear & Minibear (Gym, 2 – 4 Y.O)",
+    subtitle: "Parent & Toddler fun · Little Movers/Explorers",
+    star: false,
+  },
+  {
+    time: "12:00 – 13:00",
+    title: "Performance / Lunch Break",
+    subtitle: "Showcase performance on 5 Sept · lunch / free roam both days",
+    star: false,
+  },
+  {
+    time: "13:00 – 14:00",
+    title: "Beginner (Gym, 5.5 Y.O & above)",
+    subtitle: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+    star: false,
+  },
+  {
+    time: "14:00 – 15:00",
+    title: "Gym Bear (Atrium, 4 – 5 Y.O)",
+    subtitle: "Junior/Adventure/Independent Gym",
+    star: false,
+  },
+  {
+    time: "15:00 – 16:00",
+    title: "Intermediate (Gym, Inter 1 & above)",
+    subtitle: "Gymnastics/Cartwheel in motion · Dynamic Movers · All Stars",
+    star: false,
+  },
 ] as const;

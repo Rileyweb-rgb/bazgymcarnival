@@ -1,12 +1,50 @@
+export type MembershipType = "hometeamns" | "non-hometeamns";
+
+export const MEMBERSHIP_OPTIONS: {
+  id: MembershipType;
+  label: string;
+  shortLabel: string;
+  price: string;
+  qrSeed: string;
+}[] = [
+  {
+    id: "hometeamns",
+    label: "HomeTeamNS member",
+    shortLabel: "HomeTeamNS",
+    // Dummy prices — replace when final fees are confirmed
+    price: process.env.NEXT_PUBLIC_TICKET_PRICE_HOMETEAMNS ?? "$10",
+    qrSeed:
+      process.env.NEXT_PUBLIC_PAYNOW_QR_SEED_HOMETEAMNS ??
+      "BAZGYM-PAYNOW-HOMETEAMNS-DUMMY",
+  },
+  {
+    id: "non-hometeamns",
+    label: "Non-HomeTeamNS member",
+    shortLabel: "Non-member",
+    price: process.env.NEXT_PUBLIC_TICKET_PRICE_NON_HOMETEAMNS ?? "$15",
+    qrSeed:
+      process.env.NEXT_PUBLIC_PAYNOW_QR_SEED_NON_HOMETEAMNS ??
+      "BAZGYM-PAYNOW-NONMEMBER-DUMMY",
+  },
+];
+
 export const PAYMENT_CONFIG = {
-  ticketPrice: process.env.NEXT_PUBLIC_TICKET_PRICE ?? "$15",
   paymentMethod: process.env.NEXT_PUBLIC_PAYMENT_METHOD ?? "PayNow",
+  /** Fallback single price (legacy). Prefer membership-specific prices. */
+  ticketPrice: process.env.NEXT_PUBLIC_TICKET_PRICE ?? "$15",
   paynowQrSeed:
-    process.env.NEXT_PUBLIC_PAYNOW_QR_SEED ??
-    "BAZGYM-PAYNOW-15",
+    process.env.NEXT_PUBLIC_PAYNOW_QR_SEED ?? "BAZGYM-PAYNOW-15",
   instructions:
     "Scan the QR with your banking app, pay the ticket fee, screenshot the receipt, then upload it below.",
 } as const;
+
+export function getMembershipOption(type: MembershipType) {
+  const found = MEMBERSHIP_OPTIONS.find((o) => o.id === type);
+  if (!found) {
+    return MEMBERSHIP_OPTIONS[1]!;
+  }
+  return found;
+}
 
 export const PAYMENT_SCREENSHOT_MAX_BYTES = 4 * 1024 * 1024;
 

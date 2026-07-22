@@ -3,6 +3,7 @@ import type { RegistrationPayload } from "@/lib/registration";
 export type RegistrationRecord = RegistrationPayload & {
   preferredDayLabel: string;
   preferredTimeLabel: string;
+  membershipLabel: string;
   submittedAt: string;
   event: string;
   attendeeCode: string;
@@ -36,6 +37,7 @@ export const SHEET_COLUMN_HEADERS = {
     "Payment Screenshot",
     "Confirmation Email Sent",
     "Event",
+    "Membership",
   ],
   waiver: [
     "Submitted At",

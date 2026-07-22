@@ -1,18 +1,21 @@
 export type PreferredDay = "5-sept" | "6-sept";
 
-/** Pop-up class hourly slots (class names TBA). */
+/**
+ * Pop-up class hourly slots (both days).
+ * 12–1pm is Performance / Lunch — not bookable as a class.
+ */
 export type PreferredTime =
   | "10-11"
   | "11-12"
-  | "12-13"
   | "13-14"
   | "14-15"
   | "15-16";
 
+export type MembershipType = "hometeamns" | "non-hometeamns";
+
 export const PREFERRED_TIME_SLOTS: PreferredTime[] = [
   "10-11",
   "11-12",
-  "12-13",
   "13-14",
   "14-15",
   "15-16",
@@ -26,6 +29,7 @@ export type RegistrationPayload = {
   childDateOfBirth: string;
   preferredDay: PreferredDay;
   preferredTime: PreferredTime;
+  membershipType: MembershipType;
   waiverAccepted: boolean;
 };
 
@@ -35,12 +39,52 @@ export const PREFERRED_DAY_LABELS: Record<PreferredDay, string> = {
 };
 
 export const PREFERRED_TIME_LABELS: Record<PreferredTime, string> = {
-  "10-11": "10am – 11am",
-  "11-12": "11am – 12pm",
-  "12-13": "12pm – 1pm",
-  "13-14": "1pm – 2pm",
-  "14-15": "2pm – 3pm",
-  "15-16": "3pm – 4pm",
+  "10-11": "10am – 11am · Beginner",
+  "11-12": "11am – 12pm · TinyBear & Minibear",
+  "13-14": "1pm – 2pm · Beginner",
+  "14-15": "2pm – 3pm · Gym Bear",
+  "15-16": "3pm – 4pm · Intermediate",
+};
+
+export const PREFERRED_TIME_DETAILS: Record<
+  PreferredTime,
+  { className: string; venue: string; age: string; altNames: string }
+> = {
+  "10-11": {
+    className: "Beginner",
+    venue: "Atrium",
+    age: "5.5 Y.O & above",
+    altNames: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+  },
+  "11-12": {
+    className: "TinyBear & Minibear",
+    venue: "Gym",
+    age: "2 – 4 Y.O",
+    altNames: "Parent & Toddler fun · Little Movers/Explorers",
+  },
+  "13-14": {
+    className: "Beginner",
+    venue: "Gym",
+    age: "5.5 Y.O & above",
+    altNames: "Intro to gymnastics · Gymnastics Discovery/Fundamentals",
+  },
+  "14-15": {
+    className: "Gym Bear",
+    venue: "Atrium",
+    age: "4 – 5 Y.O",
+    altNames: "Junior/Adventure/Independent Gym",
+  },
+  "15-16": {
+    className: "Intermediate",
+    venue: "Gym",
+    age: "Inter 1 & above",
+    altNames: "Gymnastics/Cartwheel in motion · Dynamic Movers · All Stars",
+  },
+};
+
+export const MEMBERSHIP_LABELS: Record<MembershipType, string> = {
+  hometeamns: "HomeTeamNS member",
+  "non-hometeamns": "Non-HomeTeamNS member",
 };
 
 /** External Google Form for performance / competitive showcase sign-up. */
@@ -92,6 +136,7 @@ export function validateRegistration(
     typeof b.childDateOfBirth === "string" ? b.childDateOfBirth.trim() : "";
   const preferredDay = b.preferredDay;
   const preferredTime = b.preferredTime;
+  const membershipType = b.membershipType;
   const waiverAccepted = b.waiverAccepted === true;
 
   if (!childName || childName.length < 2) {
@@ -119,12 +164,14 @@ export function validateRegistration(
   if (
     preferredTime !== "10-11" &&
     preferredTime !== "11-12" &&
-    preferredTime !== "12-13" &&
     preferredTime !== "13-14" &&
     preferredTime !== "14-15" &&
     preferredTime !== "15-16"
   ) {
     return { ok: false, error: "Please select a preferred time." };
+  }
+  if (membershipType !== "hometeamns" && membershipType !== "non-hometeamns") {
+    return { ok: false, error: "Please select HomeTeamNS membership status." };
   }
   if (!waiverAccepted) {
     return { ok: false, error: "You must accept the waiver before registering." };
@@ -140,6 +187,7 @@ export function validateRegistration(
       childDateOfBirth,
       preferredDay,
       preferredTime,
+      membershipType,
       waiverAccepted,
     },
   };
